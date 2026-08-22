@@ -1,0 +1,74 @@
+import { MapPin, Wrench, AlertTriangle } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { Card, CardContent } from "@/components/ui/card";
+import { LiveMap } from "@/components/map/live-map";
+
+export default async function AdminLiveMapPage() {
+  const supabase = await createClient();
+
+  const [{ data: mechanics }, { data: activeRequests }, { count: customerCount }] = await Promise.all([
+    supabase.from("mechanics").select("id, business_name, current_lat, current_lng, is_online, rating_avg"),
+    supabase
+      .from("service_requests")
+      .select("id, lat, lng, is_emergency, status, address")
+      .not("status", "in", "(COMPLETED,PAID,CANCELLED)"),
+    supabase.from("customers").select("id", { count: "exact", head: true }),
+  ]);
+
+  const online = (mechanics ?? []).filter((m) => m.is_online);
+  const emergencies = (activeRequests ?? []).filter((r) => r.is_emergency);
+  const center: [number, number] = [24.8607, 67.0011];
+
+  const markers = [
+    ...online
+      .filter((m) => m.current_lat && m.current_lng)
+      .map((m) => ({
+        id: `m-${m.id}`,
+        lat: m.current_lat as number,
+        lng: m.current_lng as number,
+        icon: (
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-600 text-white ring-2 ring-white">
+            <Wrench className="h-3.5 w-3.5" />
+          </div>
+        ),
+        popup: `${m.business_name ?? "Mechanic"} · online`,
+      })),
+    ...(activeRequests ?? []).map((r) => ({
+      id: `r-${r.id}`,
+      lat: r.lat,
+      lng: r.lng,
+      icon: (
+        <div className={`flex h-7 w-7 items-center justify-center rounded-full text-white ring-2 ring-white ${r.is_emergency ? "bg-red-600" : "bg-blue-600"}`}>
+          {r.is_emergency ? <AlertTriangle className="h-3.5 w-3.5" /> : <MapPin className="h-3.5 w-3.5" />}
+        </div>
+      ),
+      popup: `${r.address ?? "Customer"} · ${r.status.replaceAll("_", " ")}`,
+    })),
+  ];
+
+  return (
+    <div className="flex h-screen flex-col">
+      <div className="border-b border-neutral-200 bg-white px-6 py-4">
+        <h1 className="text-xl font-bold">Live Operations Map</h1>
+        <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            ["Mechanics Online", online.length],
+            ["Active Requests", (activeRequests ?? []).length],
+            ["Emergencies", emergencies.length],
+            ["Total Customers", customerCount ?? 0],
+          ].map(([label, val]) => (
+            <Card key={String(label)}>
+              <CardContent className="py-3">
+                <p className="text-xl font-bold">{val}</p>
+                <p className="text-xs text-neutral-500">{label}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+      <div className="flex-1">
+        <LiveMap center={center} zoom={12} radiusKm={10} markers={markers} className="h-full w-full" />
+      </div>
+    </div>
+  );
+}

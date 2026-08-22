@@ -34,13 +34,15 @@ begin
     insert into auth.users (
       instance_id, id, aud, role, email, encrypted_password,
       email_confirmed_at, created_at, updated_at,
-      raw_app_meta_data, raw_user_meta_data, is_sso_user, is_anonymous
+      raw_app_meta_data, raw_user_meta_data, is_sso_user, is_anonymous,
+      confirmation_token, recovery_token, email_change, email_change_token_new, email_change_token_current, phone_change, phone_change_token, reauthentication_token
     ) values (
       '00000000-0000-0000-0000-000000000000', new_id, 'authenticated', 'authenticated',
       m.email, crypt('demo-password-not-for-login', gen_salt('bf')),
       now(), now(), now(),
       '{"provider":"seed","providers":["seed"]}', jsonb_build_object('full_name', m.full_name),
-      false, false
+      false, false,
+      '', '', '', '', '', '', '', ''
     );
 
     insert into profiles (id, role, full_name, phone)
