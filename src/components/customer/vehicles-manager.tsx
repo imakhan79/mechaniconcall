@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { Vehicle, VehicleType } from "@/lib/supabase/types";
 
 export function VehiclesManager({ customerId, initialVehicles }: { customerId: string; initialVehicles: Vehicle[] }) {
@@ -14,6 +15,7 @@ export function VehiclesManager({ customerId, initialVehicles }: { customerId: s
   const [vehicles, setVehicles] = useState(initialVehicles);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState({ vehicle_type: "car" as VehicleType, make: "", model: "", year: "", registration_number: "", vin: "", color: "", fuel_type: "", mileage: "" });
 
   async function addVehicle() {
@@ -50,13 +52,13 @@ export function VehiclesManager({ customerId, initialVehicles }: { customerId: s
   }
 
   async function removeVehicle(id: string) {
-    if (!confirm("Remove this vehicle?")) return;
     const { error } = await supabase.from("vehicles").delete().eq("id", id);
     if (error) {
       toast.error(error.message);
       return;
     }
     setVehicles((v) => v.filter((x) => x.id !== id));
+    toast.success("Vehicle removed");
   }
 
   return (
@@ -73,7 +75,7 @@ export function VehiclesManager({ customerId, initialVehicles }: { customerId: s
                   {v.mileage != null && <p className="text-xs text-neutral-400">{v.mileage.toLocaleString()} km</p>}
                 </div>
               </div>
-              <button onClick={() => removeVehicle(v.id)}><Trash2 className="h-4 w-4 text-neutral-400 hover:text-red-600" /></button>
+              <button onClick={() => setPendingDeleteId(v.id)}><Trash2 className="h-4 w-4 text-neutral-400 hover:text-red-600" /></button>
             </CardContent>
           </Card>
         ))}
@@ -102,6 +104,19 @@ export function VehiclesManager({ customerId, initialVehicles }: { customerId: s
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {pendingDeleteId && (
+        <ConfirmDialog
+          title="Remove this vehicle?"
+          description="This can't be undone."
+          confirmLabel="Remove"
+          onCancel={() => setPendingDeleteId(null)}
+          onConfirm={() => {
+            removeVehicle(pendingDeleteId);
+            setPendingDeleteId(null);
+          }}
+        />
       )}
     </div>
   );

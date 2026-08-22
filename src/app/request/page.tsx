@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { RequestWizard } from "@/components/request/request-wizard";
@@ -20,11 +21,13 @@ export default async function RequestPage() {
   ]);
 
   return (
-    <RequestWizard
-      categories={categories ?? []}
-      vehicles={vehicles ?? []}
-      savedLocations={savedLocations ?? []}
-      customerId={user.id}
-    />
+    <Suspense>
+      <RequestWizard
+        categories={categories ?? []}
+        vehicles={vehicles ?? []}
+        savedLocations={savedLocations ?? []}
+        customerId={user.id}
+      />
+    </Suspense>
   );
 }

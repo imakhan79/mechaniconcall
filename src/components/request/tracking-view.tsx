@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { LiveMap } from "@/components/map/live-map";
 import { StatusTimeline } from "@/components/request/status-timeline";
 import { ChatPanel } from "@/components/chat/chat-panel";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { EstimateItem, Mechanic, PaymentMethod, RepairEstimate, ServiceCategory, ServiceRequest } from "@/lib/supabase/types";
 
 interface Candidate extends Mechanic {
@@ -41,6 +42,7 @@ export function TrackingView({
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [showRating, setShowRating] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   // realtime: request row updates
   useEffect(() => {
@@ -142,7 +144,6 @@ export function TrackingView({
   }
 
   async function cancelRequest() {
-    if (!confirm("Cancel this service request?")) return;
     await supabase
       .from("service_requests")
       .update({ status: "CANCELLED", cancelled_at: new Date().toISOString() })
@@ -267,7 +268,7 @@ export function TrackingView({
           </div>
 
           {!["COMPLETED", "PAID", "CANCELLED"].includes(request.status) && (
-            <Button variant="outline" className="mt-2 w-full" onClick={cancelRequest}>
+            <Button variant="outline" className="mt-2 w-full" onClick={() => setShowCancelConfirm(true)}>
               Cancel Request
             </Button>
           )}
@@ -284,6 +285,20 @@ export function TrackingView({
           customerId={currentUserId}
           mechanicId={mechanic?.id ?? request.mechanic_id!}
           onClose={() => setShowRating(false)}
+        />
+      )}
+
+      {showCancelConfirm && (
+        <ConfirmDialog
+          title="Cancel this service request?"
+          description="The mechanic will be notified and this request will be closed."
+          confirmLabel="Cancel Request"
+          cancelLabel="Keep Request"
+          onCancel={() => setShowCancelConfirm(false)}
+          onConfirm={() => {
+            setShowCancelConfirm(false);
+            cancelRequest();
+          }}
         />
       )}
     </div>
