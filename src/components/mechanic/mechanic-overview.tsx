@@ -92,7 +92,11 @@ export function MechanicOverview({
   }
 
   async function rejectAssigned(job: OpenJob) {
-    await supabase.from("service_requests").update({ mechanic_id: null, status: "SEARCHING" }).eq("id", job.id);
+    const { error } = await supabase.from("service_requests").update({ mechanic_id: null, status: "SEARCHING" }).eq("id", job.id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Job passed on");
   }
 
