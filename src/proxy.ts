@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
   const protectedPrefixes = ["/customer", "/mechanic", "/admin"];
-  const isProtected = protectedPrefixes.some((p) => path.startsWith(p));
+  const isProtected = protectedPrefixes.some((p) => path === p || path.startsWith(p + "/"));
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone();
