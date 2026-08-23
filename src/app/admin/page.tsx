@@ -2,6 +2,7 @@ import { MapPin, Wrench, AlertTriangle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { LiveMap } from "@/components/map/live-map";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion/reveal";
 
 export default async function AdminLiveMapPage() {
   const supabase = await createClient();
@@ -50,25 +51,30 @@ export default async function AdminLiveMapPage() {
     <div className="flex h-screen flex-col">
       <div className="border-b border-neutral-200 bg-white px-6 py-4">
         <h1 className="text-xl font-bold">Live Operations Map</h1>
-        <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Stagger className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
-            ["Mechanics Online", online.length],
-            ["Active Requests", (activeRequests ?? []).length],
-            ["Emergencies", emergencies.length],
-            ["Total Customers", customerCount ?? 0],
-          ].map(([label, val]) => (
-            <Card key={String(label)}>
-              <CardContent className="py-3">
-                <p className="text-xl font-bold">{val}</p>
-                <p className="text-xs text-neutral-500">{label}</p>
-              </CardContent>
-            </Card>
+            ["Mechanics Online", online.length, false],
+            ["Active Requests", (activeRequests ?? []).length, false],
+            ["Emergencies", emergencies.length, emergencies.length > 0],
+            ["Total Customers", customerCount ?? 0, false],
+          ].map(([label, val, alert]) => (
+            <StaggerItem key={String(label)}>
+              <Card className={alert ? "border-red-300 bg-red-50" : undefined}>
+                <CardContent className="flex items-center gap-2 py-3">
+                  {alert && <AlertTriangle className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />}
+                  <div>
+                    <p className={`text-xl font-bold tabular-nums ${alert ? "text-red-700" : ""}`}>{val as number}</p>
+                    <p className={`text-xs ${alert ? "text-red-600" : "text-neutral-500"}`}>{label as string}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
-      <div className="flex-1">
+      <FadeIn className="flex-1" y={0}>
         <LiveMap center={center} zoom={12} radiusKm={10} markers={markers} className="h-full w-full" />
-      </div>
+      </FadeIn>
     </div>
   );
 }
