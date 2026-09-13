@@ -34,23 +34,19 @@ export async function submitAppointment(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("appointments")
-    .insert({
-      car_number: parsed.data.carNumber.toUpperCase(),
-      owner_name: parsed.data.ownerName,
-      owner_mobile: parsed.data.ownerMobile,
-      requested_date: parsed.data.requestedDate,
-      requested_time: parsed.data.requestedTime,
-    })
-    .select("id")
-    .single();
+  const { data: newId, error } = await supabase.rpc("request_appointment", {
+    p_car_number: parsed.data.carNumber.toUpperCase(),
+    p_owner_name: parsed.data.ownerName,
+    p_owner_mobile: parsed.data.ownerMobile,
+    p_requested_date: parsed.data.requestedDate,
+    p_requested_time: parsed.data.requestedTime,
+  });
 
-  if (error || !data) {
+  if (error || newId == null) {
     return { ok: false as const, error: "Something went wrong. Please try again." };
   }
 
-  return { ok: true as const, id: data.id as number };
+  return { ok: true as const, id: newId as number };
 }
 
 function startOfToday() {
