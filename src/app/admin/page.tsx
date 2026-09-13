@@ -1,80 +1,86 @@
-import { MapPin, Wrench, AlertTriangle } from "lucide-react";
+import { Suspense } from "react";
+import Link from "next/link";
+import { format } from "date-fns";
 import { createClient } from "@/lib/supabase/server";
-import { Card, CardContent } from "@/components/ui/card";
-import { LiveMap } from "@/components/map/live-map";
-import { FadeIn, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { Badge } from "@/components/ui/badge";
+import { AppointmentFilters } from "@/components/admin/appointment-filters";
 
-export default async function AdminLiveMapPage() {
+export default async function AdminAppointmentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; status?: string; date?: string }>;
+}) {
+  const { q, status, date } = await searchParams;
   const supabase = await createClient();
 
-  const [{ data: mechanics }, { data: activeRequests }, { count: customerCount }] = await Promise.all([
-    supabase.from("mechanics").select("id, business_name, current_lat, current_lng, is_online, rating_avg"),
-    supabase
-      .from("service_requests")
-      .select("id, lat, lng, is_emergency, status, address")
-      .not("status", "in", "(COMPLETED,PAID,CANCELLED)"),
-    supabase.from("customers").select("id", { count: "exact", head: true }),
-  ]);
+  let query = supabase.from("appointments").select("*").order("created_at", { ascending: false });
 
-  const online = (mechanics ?? []).filter((m) => m.is_online);
-  const emergencies = (activeRequests ?? []).filter((r) => r.is_emergency);
-  const center: [number, number] = [24.8607, 67.0011];
+  if (status === "requested" || status === "fixed") {
+    query = query.eq("status", status);
+  }
+  if (date) {
+    query = query.eq("requested_date", date);
+  }
+  if (q) {
+    const term = q.trim().replace(/[%,]/g, "");
+    const orFilters = [`car_number.ilike.%${term}%`, `owner_name.ilike.%${term}%`, `owner_mobile.ilike.%${term}%`];
+    if (/^\d+$/.test(term)) orFilters.push(`id.eq.${term}`);
+    query = query.or(orFilters.join(","));
+  }
 
-  const markers = [
-    ...online
-      .filter((m) => m.current_lat && m.current_lng)
-      .map((m) => ({
-        id: `m-${m.id}`,
-        lat: m.current_lat as number,
-        lng: m.current_lng as number,
-        icon: (
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-600 text-white ring-2 ring-white">
-            <Wrench className="h-3.5 w-3.5" />
-          </div>
-        ),
-        popup: `${m.business_name ?? "Mechanic"} · online`,
-      })),
-    ...(activeRequests ?? []).map((r) => ({
-      id: `r-${r.id}`,
-      lat: r.lat,
-      lng: r.lng,
-      icon: (
-        <div className={`flex h-7 w-7 items-center justify-center rounded-full text-white ring-2 ring-white ${r.is_emergency ? "bg-red-600" : "bg-blue-600"}`}>
-          {r.is_emergency ? <AlertTriangle className="h-3.5 w-3.5" /> : <MapPin className="h-3.5 w-3.5" />}
-        </div>
-      ),
-      popup: `${r.address ?? "Customer"} · ${r.status.replaceAll("_", " ")}`,
-    })),
-  ];
+  const { data: appointments } = await query.limit(200);
 
   return (
-    <div className="flex h-screen flex-col">
-      <div className="border-b border-neutral-200 bg-white px-6 py-4">
-        <h1 className="text-xl font-bold">Live Operations Map</h1>
-        <Stagger className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {[
-            ["Mechanics Online", online.length, false],
-            ["Active Requests", (activeRequests ?? []).length, false],
-            ["Emergencies", emergencies.length, emergencies.length > 0],
-            ["Total Customers", customerCount ?? 0, false],
-          ].map(([label, val, alert]) => (
-            <StaggerItem key={String(label)}>
-              <Card className={alert ? "border-red-300 bg-red-50" : undefined}>
-                <CardContent className="flex items-center gap-2 py-3">
-                  {alert && <AlertTriangle className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />}
-                  <div>
-                    <p className={`text-xl font-bold tabular-nums ${alert ? "text-red-700" : ""}`}>{val as number}</p>
-                    <p className={`text-xs ${alert ? "text-red-600" : "text-neutral-500"}`}>{label as string}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </StaggerItem>
-          ))}
-        </Stagger>
+    <div>
+      <h1 className="mb-4 text-xl font-bold text-neutral-900">Appointment Requests</h1>
+
+      <Suspense fallback={<div className="h-[52px] rounded-xl border border-neutral-200 bg-white" />}>
+        <AppointmentFilters />
+      </Suspense>
+
+      <div className="mt-4 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+        <table className="w-full min-w-[640px] text-sm">
+          <thead className="bg-neutral-50 text-left text-xs font-semibold uppercase text-neutral-500">
+            <tr>
+              <th className="px-4 py-3">ID</th>
+              <th className="px-4 py-3">Car No.</th>
+              <th className="px-4 py-3">Owner</th>
+              <th className="px-4 py-3">Mobile</th>
+              <th className="px-4 py-3">Requested Date</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3" />
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-neutral-100">
+            {(appointments ?? []).map((a) => (
+              <tr key={a.id} className="hover:bg-neutral-50">
+                <td className="px-4 py-3 font-medium text-neutral-900">#{a.id}</td>
+                <td className="px-4 py-3">{a.car_number}</td>
+                <td className="px-4 py-3">{a.owner_name}</td>
+                <td className="px-4 py-3">{a.owner_mobile}</td>
+                <td className="px-4 py-3">{format(new Date(`${a.requested_date}T00:00:00`), "d MMM yyyy")}</td>
+                <td className="px-4 py-3">
+                  <Badge variant={a.status === "fixed" ? "success" : "warning"}>
+                    {a.status === "fixed" ? "Appointment Fixed" : "Appointment Requested"}
+                  </Badge>
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <Link href={`/admin/appointments/${a.id}`} className="text-sm font-medium text-orange-600 hover:underline">
+                    Open
+                  </Link>
+                </td>
+              </tr>
+            ))}
+            {(appointments ?? []).length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-8 text-center text-neutral-400">
+                  No appointments found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-      <FadeIn className="flex-1" y={0}>
-        <LiveMap center={center} zoom={12} radiusKm={10} markers={markers} className="h-full w-full" />
-      </FadeIn>
     </div>
   );
 }

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mechanic On Call — Roadside Assistance, Wherever You Are",
+  title: "Mechanic On Call — Book a Service Appointment",
   description:
-    "Request a trusted mechanic to your location in minutes. Live tracking, transparent pricing, 24/7 emergency roadside assistance.",
+    "Request a maintenance or service appointment with our workshop: pick a date and time, and we'll confirm it with you.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
