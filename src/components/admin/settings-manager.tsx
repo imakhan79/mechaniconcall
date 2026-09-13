@@ -15,7 +15,6 @@ import {
   toggleTimeSlot,
 } from "@/app/admin/settings/actions";
 import type { BlockedDate, TimeSlot } from "@/lib/supabase/types";
-import { formatSlotTime } from "@/lib/utils";
 
 type ActionResult = { ok: boolean; error?: string };
 
@@ -74,7 +73,7 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
             {timeSlots.map((slot) => (
               <li key={slot.id} className="flex items-center justify-between py-2 text-sm">
                 <span className={slot.is_active ? "text-neutral-900" : "text-neutral-400 line-through"}>
-                  {slot.label} ({formatSlotTime(slot.slot_time)})
+                  {slot.label}
                 </span>
                 <div className="flex items-center gap-3">
                   <button
