@@ -16,10 +16,12 @@ import {
   startOfWeek,
   subMonths,
 } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function AppointmentCalendar({
   selectedDate,
@@ -32,6 +34,7 @@ export function AppointmentCalendar({
 }) {
   const today = startOfDay(new Date());
   const [viewMonth, setViewMonth] = useState(startOfMonth(selectedDate ?? today));
+  const [monthDirection, setMonthDirection] = useState(1);
 
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(viewMonth));
@@ -41,27 +44,46 @@ export function AppointmentCalendar({
 
   const isCurrentMonth = isSameMonth(viewMonth, today);
 
+  function changeMonth(delta: number) {
+    setMonthDirection(delta);
+    setViewMonth((m) => (delta > 0 ? addMonths(m, 1) : subMonths(m, 1)));
+  }
+
   return (
     <div className="w-full select-none">
       <div className="mb-3 flex items-center justify-between">
-        <button
+        <motion.button
           type="button"
-          onClick={() => setViewMonth((m) => subMonths(m, 1))}
+          onClick={() => changeMonth(-1)}
           disabled={isCurrentMonth}
           aria-label="Previous month"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100 disabled:opacity-30 disabled:hover:bg-transparent"
+          whileTap={isCurrentMonth ? undefined : { scale: 0.9 }}
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-neutral-600 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
         >
           <ChevronLeft className="h-5 w-5" />
-        </button>
-        <p className="text-base font-semibold text-neutral-900">{format(viewMonth, "MMMM yyyy")}</p>
-        <button
+        </motion.button>
+        <AnimatePresence mode="wait" custom={monthDirection} initial={false}>
+          <motion.p
+            key={format(viewMonth, "yyyy-MM")}
+            custom={monthDirection}
+            initial={{ opacity: 0, x: monthDirection > 0 ? 16 : -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: monthDirection > 0 ? -16 : 16 }}
+            transition={{ duration: 0.2, ease: EASE }}
+            className="text-base font-semibold text-neutral-900"
+          >
+            {format(viewMonth, "MMMM yyyy")}
+          </motion.p>
+        </AnimatePresence>
+        <motion.button
           type="button"
-          onClick={() => setViewMonth((m) => addMonths(m, 1))}
+          onClick={() => changeMonth(1)}
           aria-label="Next month"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100"
+          whileTap={{ scale: 0.9 }}
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-neutral-600 hover:bg-sky-50"
         >
           <ChevronRight className="h-5 w-5" />
-        </button>
+        </motion.button>
       </div>
 
       <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-neutral-400">
@@ -82,31 +104,39 @@ export function AppointmentCalendar({
           const selected = selectedDate ? isSameDay(day, selectedDate) : false;
 
           return (
-            <button
+            <motion.button
               key={key}
               type="button"
               disabled={disabled}
               onClick={() => onSelect(day)}
               aria-label={format(day, "d MMMM yyyy")}
               aria-pressed={selected}
+              whileTap={disabled ? undefined : { scale: 0.9 }}
               className={cn(
                 "relative flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium transition-colors sm:h-12",
                 !inMonth && "invisible",
-                inMonth && !disabled && !selected && "text-neutral-800 hover:bg-orange-50",
-                selected && "bg-orange-600 text-white shadow-sm",
+                inMonth && !disabled && "cursor-pointer",
+                inMonth && !disabled && !selected && "text-neutral-800 hover:bg-sky-50",
                 disabled && inMonth && "cursor-not-allowed text-neutral-300 line-through",
-                isToday(day) && !selected && "ring-1 ring-inset ring-orange-300"
+                isToday(day) && !selected && "ring-1 ring-inset ring-sky-300"
               )}
             >
-              {format(day, "d")}
-            </button>
+              {selected && (
+                <motion.span
+                  layoutId="selected-day"
+                  className="absolute inset-0 rounded-lg bg-sky-700 shadow-sm"
+                  transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                />
+              )}
+              <span className={cn("relative z-10", selected && "text-white")}>{format(day, "d")}</span>
+            </motion.button>
           );
         })}
       </div>
 
       <div className="mt-3 flex items-center gap-4 text-xs text-neutral-500">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-orange-600" /> Selected
+          <span className="h-2.5 w-2.5 rounded-full bg-sky-700" /> Selected
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-neutral-200" /> Unavailable

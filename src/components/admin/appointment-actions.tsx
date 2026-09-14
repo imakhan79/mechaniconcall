@@ -50,7 +50,7 @@ export function AppointmentActions({ appointment }: { appointment: Appointment }
     <div className="mt-5 grid gap-4 sm:grid-cols-2">
       <form onSubmit={handleUpdate} className="rounded-xl border border-neutral-200 bg-white p-5">
         <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-neutral-900">
-          <CalendarClock className="h-4 w-4 text-orange-600" aria-hidden="true" /> Update Date/Time
+          <CalendarClock className="h-4 w-4 text-sky-700" aria-hidden="true" /> Update Date/Time
         </h3>
         <div className="flex flex-col gap-3">
           <Input type="date" value={finalDate} onChange={(e) => setFinalDate(e.target.value)} required />
@@ -70,7 +70,7 @@ export function AppointmentActions({ appointment }: { appointment: Appointment }
         </div>
         <Button
           className="mt-4"
-          variant="primary"
+          variant="accent"
           disabled={pending || appointment.status === "fixed"}
           onClick={handleMarkFixed}
         >

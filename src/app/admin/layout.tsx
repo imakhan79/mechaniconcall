@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Link href="/admin" className="flex items-center gap-2 font-bold text-neutral-900">
-            <Wrench className="h-5 w-5 text-orange-600" aria-hidden="true" /> Workshop Admin
+            <Wrench className="h-5 w-5 text-sky-700" aria-hidden="true" /> Workshop Admin
           </Link>
           <nav className="flex items-center gap-4 text-sm">
             <Link href="/admin" className="flex items-center gap-1.5 text-neutral-600 hover:text-neutral-900">

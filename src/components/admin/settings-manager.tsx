@@ -78,7 +78,7 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    className="text-xs font-medium text-orange-600 hover:underline disabled:opacity-50"
+                    className="text-xs font-medium text-sky-700 hover:underline disabled:opacity-50"
                     disabled={pending}
                     onClick={() => {
                       const fd = new FormData();

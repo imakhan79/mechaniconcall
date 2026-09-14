@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, CheckCircle2, ChevronLeft, Clock, Wrench } from "lucide-react";
 import { AppointmentCalendar } from "@/components/appointment/calendar";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { submitAppointment } from "@/app/actions";
 import { cn } from "@/lib/utils";
 import type { TimeSlot } from "@/lib/supabase/types";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const detailsSchema = z.object({
   carNumber: z.string().trim().min(2, "Enter the car registration number").max(20, "Too long"),
@@ -35,6 +38,7 @@ export function AppointmentPortal({
 }) {
   const blockedSet = useMemo(() => new Set(blockedDates), [blockedDates]);
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [date, setDate] = useState<Date | null>(null);
   const [slot, setSlot] = useState<TimeSlot | null>(null);
   const [pending, startTransition] = useTransition();
@@ -46,6 +50,11 @@ export function AppointmentPortal({
     handleSubmit,
     formState: { errors },
   } = useForm<DetailsForm>({ resolver: zodResolver(detailsSchema) });
+
+  function goTo(next: number) {
+    setDirection(next > step ? 1 : -1);
+    setStep(next);
+  }
 
   function onSubmitDetails(values: DetailsForm) {
     if (!date || !slot) return;
@@ -69,32 +78,50 @@ export function AppointmentPortal({
 
   if (confirmed) {
     return (
-      <Card className="mx-auto w-full max-w-md text-center">
-        <CardContent className="flex flex-col items-center gap-3 py-10">
-          <CheckCircle2 className="h-12 w-12 text-green-600" aria-hidden="true" />
-          <h2 className="text-xl font-bold text-neutral-900">Appointment Requested</h2>
-          <p className="text-sm text-neutral-500">
-            We&apos;ve received your request. The workshop will call you to confirm.
-          </p>
-          <div className="mt-2 w-full rounded-lg bg-neutral-50 p-4 text-left text-sm">
-            <Row label="Reference" value={`#${confirmed.id}`} />
-            <Row label="Requested date" value={format(confirmed.date, "EEEE, d MMMM yyyy")} />
-            <Row label="Requested time" value={confirmed.slot.label} />
-          </div>
-          <Button
-            variant="outline"
-            className="mt-4 w-full"
-            onClick={() => {
-              setConfirmed(null);
-              setDate(null);
-              setSlot(null);
-              setStep(0);
-            }}
-          >
-            Book another appointment
-          </Button>
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 16, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.45, ease: EASE }}
+        className="mx-auto w-full max-w-md"
+      >
+        <Card className="text-center">
+          <CardContent className="flex flex-col items-center gap-3 py-10">
+            <motion.div
+              initial={{ scale: 0, rotate: -45 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
+            >
+              <CheckCircle2 className="h-12 w-12 text-emerald-600" aria-hidden="true" />
+            </motion.div>
+            <h2 className="text-xl font-bold text-neutral-900">Appointment Requested</h2>
+            <p className="text-sm text-neutral-500">
+              We&apos;ve received your request. The workshop will call you to confirm.
+            </p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.3 }}
+              className="mt-2 w-full rounded-lg bg-sky-50 p-4 text-left text-sm"
+            >
+              <Row label="Reference" value={`#${confirmed.id}`} />
+              <Row label="Requested date" value={format(confirmed.date, "EEEE, d MMMM yyyy")} />
+              <Row label="Requested time" value={confirmed.slot.label} />
+            </motion.div>
+            <Button
+              variant="outline"
+              className="mt-4 w-full"
+              onClick={() => {
+                setConfirmed(null);
+                setDate(null);
+                setSlot(null);
+                setStep(0);
+              }}
+            >
+              Book another appointment
+            </Button>
+          </CardContent>
+        </Card>
+      </motion.div>
     );
   }
 
@@ -103,14 +130,16 @@ export function AppointmentPortal({
       <ol className="mb-6 flex items-center justify-center gap-2">
         {STEPS.map((label, i) => (
           <li key={label} className="flex items-center gap-2">
-            <span
+            <motion.span
+              layout
               className={cn(
                 "flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
-                i === step ? "bg-orange-600 text-white" : i < step ? "bg-orange-100 text-orange-700" : "bg-neutral-100 text-neutral-400"
+                i === step ? "bg-sky-700 text-white" : i < step ? "bg-sky-100 text-sky-800" : "bg-neutral-100 text-neutral-400"
               )}
+              transition={{ duration: 0.25, ease: EASE }}
             >
               {i + 1}
-            </span>
+            </motion.span>
             <span className={cn("text-xs font-medium", i === step ? "text-neutral-900" : "text-neutral-400")}>
               {label}
             </span>
@@ -119,100 +148,158 @@ export function AppointmentPortal({
         ))}
       </ol>
 
-      <Card>
+      <Card className="overflow-hidden">
         <CardContent className="p-5">
-          {step === 0 && (
-            <>
-              <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                <CalendarDays className="h-4 w-4 text-orange-600" aria-hidden="true" /> Select appointment date
-              </h2>
-              <AppointmentCalendar selectedDate={date} blockedDates={blockedSet} onSelect={setDate} />
-              <Button className="mt-5 w-full" size="lg" variant="primary" disabled={!date} onClick={() => setStep(1)}>
-                Continue
-              </Button>
-            </>
-          )}
-
-          {step === 1 && (
-            <>
-              <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                <Clock className="h-4 w-4 text-orange-600" aria-hidden="true" /> Select appointment time
-              </h2>
-              <p className="mb-3 text-sm text-neutral-500">{date && format(date, "EEEE, d MMMM yyyy")}</p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {timeSlots.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSlot(s)}
-                    className={cn(
-                      "min-h-12 rounded-lg border px-3 py-3 text-sm font-medium transition-colors",
-                      slot?.id === s.id
-                        ? "border-orange-600 bg-orange-600 text-white"
-                        : "border-neutral-200 text-neutral-700 hover:border-orange-300 hover:bg-orange-50"
-                    )}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-                {timeSlots.length === 0 && (
-                  <p className="col-span-full text-sm text-neutral-400">No time slots are available right now.</p>
-                )}
-              </div>
-              <div className="mt-5 flex gap-3">
-                <Button type="button" variant="outline" size="lg" onClick={() => setStep(0)}>
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Back
-                </Button>
-                <Button className="flex-1" size="lg" variant="primary" disabled={!slot} onClick={() => setStep(2)}>
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
+            {step === 0 && (
+              <motion.div
+                key="date"
+                custom={direction}
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3, ease: EASE }}
+              >
+                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
+                  <CalendarDays className="h-4 w-4 text-sky-700" aria-hidden="true" /> Select appointment date
+                </h2>
+                <AppointmentCalendar selectedDate={date} blockedDates={blockedSet} onSelect={setDate} />
+                <Button className="mt-5 w-full" size="lg" variant="primary" disabled={!date} onClick={() => goTo(1)}>
                   Continue
                 </Button>
-              </div>
-            </>
-          )}
+              </motion.div>
+            )}
 
-          {step === 2 && (
-            <form onSubmit={handleSubmit(onSubmitDetails)} className="flex flex-col gap-4">
-              <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900">
-                <Wrench className="h-4 w-4 text-orange-600" aria-hidden="true" /> Vehicle & contact details
-              </h2>
-              <div className="rounded-lg bg-neutral-50 p-3 text-sm text-neutral-600">
-                {date && format(date, "EEEE, d MMMM yyyy")} · {slot?.label}
-              </div>
+            {step === 1 && (
+              <motion.div
+                key="time"
+                custom={direction}
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3, ease: EASE }}
+              >
+                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
+                  <Clock className="h-4 w-4 text-sky-700" aria-hidden="true" /> Select appointment time
+                </h2>
+                <p className="mb-3 text-sm text-neutral-500">{date && format(date, "EEEE, d MMMM yyyy")}</p>
+                <motion.div
+                  className="grid grid-cols-2 gap-2 sm:grid-cols-3"
+                  initial="hidden"
+                  animate="show"
+                  variants={{ hidden: {}, show: { transition: { staggerChildren: 0.04 } } }}
+                >
+                  {timeSlots.map((s) => (
+                    <motion.button
+                      key={s.id}
+                      type="button"
+                      variants={{
+                        hidden: { opacity: 0, y: 8 },
+                        show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: EASE } },
+                      }}
+                      whileHover={{ y: -1 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => setSlot(s)}
+                      className={cn(
+                        "min-h-12 cursor-pointer rounded-lg border px-3 py-3 text-sm font-medium transition-colors",
+                        slot?.id === s.id
+                          ? "border-sky-700 bg-sky-700 text-white"
+                          : "border-neutral-200 text-neutral-700 hover:border-sky-300 hover:bg-sky-50"
+                      )}
+                    >
+                      {s.label}
+                    </motion.button>
+                  ))}
+                  {timeSlots.length === 0 && (
+                    <p className="col-span-full text-sm text-neutral-400">No time slots are available right now.</p>
+                  )}
+                </motion.div>
+                <div className="mt-5 flex gap-3">
+                  <Button type="button" variant="outline" size="lg" onClick={() => goTo(0)}>
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Back
+                  </Button>
+                  <Button className="flex-1" size="lg" variant="primary" disabled={!slot} onClick={() => goTo(2)}>
+                    Continue
+                  </Button>
+                </div>
+              </motion.div>
+            )}
 
-              <Field label="Car / Registration Number" error={errors.carNumber?.message}>
-                <Input placeholder="e.g. ABC-123" {...register("carNumber")} />
-              </Field>
-              <Field label="Owner Name" error={errors.ownerName?.message}>
-                <Input placeholder="Full name" {...register("ownerName")} />
-              </Field>
-              <Field label="Owner Mobile Number" error={errors.ownerMobile?.message}>
-                <Input type="tel" placeholder="e.g. 0300 1234567" {...register("ownerMobile")} />
-              </Field>
+            {step === 2 && (
+              <motion.div
+                key="details"
+                custom={direction}
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3, ease: EASE }}
+              >
+                <form onSubmit={handleSubmit(onSubmitDetails)} className="flex flex-col gap-4">
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900">
+                    <Wrench className="h-4 w-4 text-sky-700" aria-hidden="true" /> Vehicle & contact details
+                  </h2>
+                  <div className="rounded-lg bg-sky-50 p-3 text-sm text-neutral-600">
+                    {date && format(date, "EEEE, d MMMM yyyy")} · {slot?.label}
+                  </div>
 
-              {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+                  <Field label="Car / Registration Number" error={errors.carNumber?.message}>
+                    <Input placeholder="e.g. ABC-123" {...register("carNumber")} />
+                  </Field>
+                  <Field label="Owner Name" error={errors.ownerName?.message}>
+                    <Input placeholder="Full name" {...register("ownerName")} />
+                  </Field>
+                  <Field label="Owner Mobile Number" error={errors.ownerMobile?.message}>
+                    <Input type="tel" placeholder="e.g. 0300 1234567" {...register("ownerMobile")} />
+                  </Field>
 
-              <div className="flex gap-3">
-                <Button type="button" variant="outline" size="lg" onClick={() => setStep(1)} disabled={pending}>
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Back
-                </Button>
-                <Button type="submit" className="flex-1" size="lg" variant="primary" disabled={pending}>
-                  {pending ? "Submitting..." : "Submit Appointment Request"}
-                </Button>
-              </div>
-            </form>
-          )}
+                  {serverError && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-sm text-red-600"
+                      role="alert"
+                    >
+                      {serverError}
+                    </motion.p>
+                  )}
+
+                  <div className="flex gap-3">
+                    <Button type="button" variant="outline" size="lg" onClick={() => goTo(1)} disabled={pending}>
+                      <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Back
+                    </Button>
+                    <Button type="submit" className="flex-1" size="lg" variant="primary" disabled={pending}>
+                      {pending ? "Submitting..." : "Submit Appointment Request"}
+                    </Button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </CardContent>
       </Card>
     </div>
   );
 }
 
+const stepVariants = {
+  enter: (direction: number) => ({ opacity: 0, x: direction > 0 ? 24 : -24 }),
+  center: { opacity: 1, x: 0 },
+  exit: (direction: number) => ({ opacity: 0, x: direction > 0 ? -24 : 24 }),
+};
+
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-neutral-700">{label}</label>
       {children}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && (
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-1 text-xs text-red-600" role="alert">
+          {error}
+        </motion.p>
+      )}
     </div>
   );
 }

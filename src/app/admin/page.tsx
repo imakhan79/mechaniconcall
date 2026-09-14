@@ -1,9 +1,8 @@
 import { Suspense } from "react";
-import Link from "next/link";
-import { format } from "date-fns";
 import { createClient } from "@/lib/supabase/server";
-import { Badge } from "@/components/ui/badge";
 import { AppointmentFilters } from "@/components/admin/appointment-filters";
+import { FadeIn } from "@/components/motion/reveal";
+import { AppointmentsTableBody } from "@/components/admin/appointments-table-body";
 
 export default async function AdminAppointmentsPage({
   searchParams,
@@ -32,15 +31,17 @@ export default async function AdminAppointmentsPage({
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-bold text-neutral-900">Appointment Requests</h1>
+      <FadeIn>
+        <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Appointment Requests</h1>
+      </FadeIn>
 
-      <Suspense fallback={<div className="h-[52px] rounded-xl border border-neutral-200 bg-white" />}>
+      <Suspense fallback={<div className="h-[52px] rounded-xl border border-sky-100 bg-white" />}>
         <AppointmentFilters />
       </Suspense>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-sky-100 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(2,132,199,0.18)]">
         <table className="w-full min-w-[640px] text-sm">
-          <thead className="bg-neutral-50 text-left text-xs font-semibold uppercase text-neutral-500">
+          <thead className="bg-sky-50/60 text-left text-xs font-semibold uppercase text-neutral-500">
             <tr>
               <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">Car No.</th>
@@ -51,34 +52,7 @@ export default async function AdminAppointmentsPage({
               <th className="px-4 py-3" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
-            {(appointments ?? []).map((a) => (
-              <tr key={a.id} className="hover:bg-neutral-50">
-                <td className="px-4 py-3 font-medium text-neutral-900">#{a.id}</td>
-                <td className="px-4 py-3">{a.car_number}</td>
-                <td className="px-4 py-3">{a.owner_name}</td>
-                <td className="px-4 py-3">{a.owner_mobile}</td>
-                <td className="px-4 py-3">{format(new Date(`${a.requested_date}T00:00:00`), "d MMM yyyy")}</td>
-                <td className="px-4 py-3">
-                  <Badge variant={a.status === "fixed" ? "success" : "warning"}>
-                    {a.status === "fixed" ? "Appointment Fixed" : "Appointment Requested"}
-                  </Badge>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <Link href={`/admin/appointments/${a.id}`} className="text-sm font-medium text-orange-600 hover:underline">
-                    Open
-                  </Link>
-                </td>
-              </tr>
-            ))}
-            {(appointments ?? []).length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-neutral-400">
-                  No appointments found.
-                </td>
-              </tr>
-            )}
-          </tbody>
+          <AppointmentsTableBody appointments={appointments ?? []} />
         </table>
       </div>
     </div>

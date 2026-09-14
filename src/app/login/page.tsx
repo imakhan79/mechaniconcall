@@ -3,11 +3,14 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,12 +35,22 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 py-10">
-      <div className="w-full max-w-sm rounded-2xl bg-white shadow-2xl shadow-black/40">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-sky-600/20 blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-emerald-600/15 blur-3xl" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 24, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.45, ease: EASE }}
+        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40"
+      >
         <div className="flex flex-col items-center gap-1 p-6 pb-2 text-center">
-          <Link href="/" className="mb-2 flex items-center gap-2 text-orange-600">
+          <Link href="/" className="mb-2 flex items-center gap-2 text-sky-700">
             <ShieldCheck className="h-6 w-6" aria-hidden="true" />
-            <span className="text-lg font-bold text-neutral-900">Workshop Login</span>
+            <span className="font-heading text-lg font-bold text-neutral-900">Workshop Login</span>
           </Link>
           <p className="text-sm text-neutral-500">Sign in to review and manage appointment requests.</p>
         </div>
@@ -75,7 +88,7 @@ export default function LoginPage() {
             )}
           </Button>
         </form>
-      </div>
+      </motion.div>
     </main>
   );
 }
