@@ -19,7 +19,7 @@ export default async function BookPage() {
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background" suppressHydrationWarning>
       <SiteHeader showBookCta={false} />
 
       <main className="flex flex-1 flex-col items-center px-4 py-8 sm:py-12">

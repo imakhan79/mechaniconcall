@@ -35,7 +35,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
+    <main
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10"
+      suppressHydrationWarning
+    >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-sky-600/20 blur-3xl" />
         <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-emerald-600/15 blur-3xl" />

@@ -50,7 +50,7 @@ const reasons = [
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background" suppressHydrationWarning>
       <SiteHeader />
 
       <main className="flex-1">
