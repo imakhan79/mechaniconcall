@@ -1,12 +1,21 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/server";
+import { VehiclesManager } from "@/components/customer/vehicles-manager";
 
-export default function CustomerVehiclesPage() {
+export default async function CustomerVehiclesPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: vehicles } = await supabase
+    .from("vehicles")
+    .select("*")
+    .eq("customer_id", user!.id)
+    .order("created_at", { ascending: false });
+
   return (
-    <div>
+    <div className="mx-auto max-w-lg">
       <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Vehicles</h1>
-      <Card>
-        <CardContent className="p-5 text-sm text-neutral-500">Vehicle management is coming in the next phase.</CardContent>
-      </Card>
+      <VehiclesManager customerId={user!.id} vehicles={vehicles ?? []} />
     </div>
   );
 }

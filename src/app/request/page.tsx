@@ -1,20 +1,23 @@
-import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { RequestWizard } from "@/components/request/request-wizard";
 
-export default function RequestPage() {
+export default async function RequestPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login?next=/request");
+
+  const [{ data: vehicles }, { data: categories }] = await Promise.all([
+    supabase.from("vehicles").select("*").eq("customer_id", user.id).order("created_at", { ascending: false }),
+    supabase.from("service_categories").select("*").order("name"),
+  ]);
+
   return (
-    <div className="mx-auto max-w-md px-4 py-16 text-center">
-      <Card>
-        <CardContent className="flex flex-col items-center gap-3 p-8">
-          <h1 className="font-heading text-xl font-bold text-neutral-900">Request a Mechanic</h1>
-          <p className="text-sm text-neutral-500">The request wizard is coming in the next phase.</p>
-          <Link href="/customer" className={cn(buttonVariants({ variant: "outline" }), "mt-2")}>
-            Back to Dashboard
-          </Link>
-        </CardContent>
-      </Card>
+    <div className="mx-auto max-w-md px-4 py-10">
+      <h1 className="mb-6 text-center font-heading text-xl font-bold text-neutral-900">Request a Mechanic</h1>
+      <RequestWizard customerId={user.id} vehicles={vehicles ?? []} categories={categories ?? []} />
     </div>
   );
 }
