@@ -13,6 +13,17 @@ import { demoLogin } from "@/app/login/actions";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+async function resolveDestination(supabase: ReturnType<typeof createClient>, userId: string) {
+  const { data: adminRow } = await supabase.from("workshop_admins").select("id").eq("id", userId).maybeSingle();
+  if (adminRow) return "/admin";
+
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", userId).maybeSingle();
+  if (profile?.role === "mechanic") return "/mechanic";
+  if (profile?.role === "customer") return "/customer";
+
+  return "/";
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -24,15 +35,17 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      setLoading(false);
       toast.error(error.message);
       return;
     }
 
-    router.push("/admin");
+    const destination = await resolveDestination(supabase, data.user.id);
+    setLoading(false);
+    router.push(destination);
     router.refresh();
   }
 
@@ -69,9 +82,9 @@ export default function LoginPage() {
         <div className="flex flex-col items-center gap-1 p-6 pb-2 text-center">
           <Link href="/" className="mb-2 flex items-center gap-2 text-sky-700">
             <ShieldCheck className="h-6 w-6" aria-hidden="true" />
-            <span className="font-heading text-lg font-bold text-neutral-900">Workshop Login</span>
+            <span className="font-heading text-lg font-bold text-neutral-900">Sign In</span>
           </Link>
-          <p className="text-sm text-neutral-500">Sign in to review and manage appointment requests.</p>
+          <p className="text-sm text-neutral-500">Customers, mechanics, and the workshop all sign in here.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6 pt-4">
@@ -83,7 +96,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@workshop.com"
+              placeholder="you@example.com"
             />
           </div>
           <div>
@@ -107,6 +120,13 @@ export default function LoginPage() {
             )}
           </Button>
 
+          <p className="text-center text-sm text-neutral-500">
+            New here?{" "}
+            <Link href="/register" className="font-medium text-sky-700 hover:underline">
+              Create an account
+            </Link>
+          </p>
+
           <div className="my-1 flex items-center gap-3 text-xs text-neutral-400">
             <span className="h-px flex-1 bg-neutral-200" />
             or
@@ -122,7 +142,7 @@ export default function LoginPage() {
             className="w-full"
           >
             <Sparkles className="h-4 w-4" aria-hidden="true" />
-            {demoLoading ? "Signing in..." : "Try Demo Login"}
+            {demoLoading ? "Signing in..." : "Try Demo Login (Workshop Admin)"}
           </Button>
         </form>
       </motion.div>

@@ -28,7 +28,8 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const isProtected = path === "/admin" || path.startsWith("/admin/");
+  const protectedPrefixes = ["/admin", "/customer", "/mechanic"];
+  const isProtected = protectedPrefixes.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 
   if (isProtected && !user) {
     const url = request.nextUrl.clone();
