@@ -17,9 +17,9 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mechanic On Call — Book a Service Appointment",
+  title: "Mechanic On Call — Trusted Vehicle Service & Repair",
   description:
-    "Request a maintenance or service appointment with our workshop: pick a date and time, and we'll confirm it with you.",
+    "Book a maintenance or repair appointment with our workshop: pick a date and time, and we'll confirm it with you.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
