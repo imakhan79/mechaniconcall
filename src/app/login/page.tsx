@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { demoLogin } from "@/app/login/actions";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -17,8 +18,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     const supabase = createClient();
@@ -27,6 +29,20 @@ export default function LoginPage() {
 
     if (error) {
       toast.error(error.message);
+      return;
+    }
+
+    router.push("/admin");
+    router.refresh();
+  }
+
+  async function handleDemoLogin() {
+    setDemoLoading(true);
+    const result = await demoLogin();
+    setDemoLoading(false);
+
+    if (!result.ok) {
+      toast.error(result.error);
       return;
     }
 
@@ -81,7 +97,7 @@ export default function LoginPage() {
               placeholder="••••••••"
             />
           </div>
-          <Button type="submit" variant="primary" size="lg" disabled={loading} className="group mt-2 w-full">
+          <Button type="submit" variant="primary" size="lg" disabled={loading || demoLoading} className="group mt-2 w-full">
             {loading ? (
               "Signing in..."
             ) : (
@@ -89,6 +105,24 @@ export default function LoginPage() {
                 Sign In <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </>
             )}
+          </Button>
+
+          <div className="my-1 flex items-center gap-3 text-xs text-neutral-400">
+            <span className="h-px flex-1 bg-neutral-200" />
+            or
+            <span className="h-px flex-1 bg-neutral-200" />
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            disabled={loading || demoLoading}
+            onClick={handleDemoLogin}
+            className="w-full"
+          >
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            {demoLoading ? "Signing in..." : "Try Demo Login"}
           </Button>
         </form>
       </motion.div>
