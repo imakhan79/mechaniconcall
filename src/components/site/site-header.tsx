@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, ShieldCheck, Wrench, X } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { InstallAppButton } from "@/components/site/install-app-button";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -46,6 +47,7 @@ export function SiteHeader() {
           >
             <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Login
           </Link>
+          <InstallAppButton />
           <Link href="/request" className={cn(buttonVariants({ variant: "primary", size: "sm" }))}>
             Get Help Now
           </Link>
@@ -87,10 +89,11 @@ export function SiteHeader() {
               <Link href="/login" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-foreground hover:bg-surface-2">
                 Login
               </Link>
+              <InstallAppButton fullWidth className="mt-2" onInstallStart={() => setOpen(false)} />
               <Link
                 href="/request"
                 onClick={() => setOpen(false)}
-                className={cn(buttonVariants({ variant: "primary" }), "mt-2 w-full")}
+                className={cn(buttonVariants({ variant: "primary" }), "w-full")}
               >
                 Get Help Now
               </Link>

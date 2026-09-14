@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import { MotionConfig } from "framer-motion";
@@ -20,6 +20,22 @@ export const metadata: Metadata = {
   title: "Mechanic On Call — Professional Help, Wherever You Need It",
   description:
     "Request a verified mechanic to your location for roadside assistance, emergency repairs, diagnostics, and vehicle maintenance.",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [{ url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Mechanic On Call",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0a0d10",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
