@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Battery,
   CheckCircle2,
@@ -6,15 +7,19 @@ import {
   Disc3,
   Fuel,
   Gauge,
+  Home as HomeIcon,
   MapPin,
   MessageSquare,
   Navigation,
   Phone,
+  Signal,
   ShieldCheck,
   Snowflake,
   Star,
   Timer,
   Truck,
+  User,
+  Wifi,
   Wind,
   Wrench,
 } from "lucide-react";
@@ -64,17 +69,29 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero */}
         <section className="relative overflow-hidden">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/hero-dubai-skyline.jpg"
+              alt="Dubai skyline and highway interchange at night, with the Burj Khalifa"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center opacity-[0.28]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+          </div>
           <div
             className="pointer-events-none absolute inset-0 opacity-40"
             style={{
               backgroundImage:
-                "radial-gradient(circle at 20% 20%, rgba(142,214,0,0.12), transparent 40%), radial-gradient(circle at 80% 0%, rgba(142,214,0,0.08), transparent 35%)",
+                "radial-gradient(circle at 20% 20%, rgba(142,214,0,0.12), transparent 40%), radial-gradient(circle at 80% 0%, rgba(245,158,11,0.10), transparent 40%)",
             }}
           />
+
           <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-2">
             <div>
               <FadeIn className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted-foreground">
-                <PulseDot /> Verified mechanics online now across the UAE
+                <PulseDot /> Live across Dubai, Abu Dhabi & Sharjah
               </FadeIn>
               <FadeIn delay={0.08}>
                 <h1 className="font-heading mt-5 text-4xl font-extrabold leading-tight text-foreground sm:text-5xl">
@@ -83,7 +100,8 @@ export default function Home() {
               </FadeIn>
               <FadeIn delay={0.16}>
                 <p className="mt-4 max-w-lg text-base text-muted-foreground sm:text-lg">
-                  Get professional roadside assistance and vehicle repair services at your location — fast, transparent, and reliable.
+                  Professional roadside assistance and vehicle repair, dispatched to your location anywhere in the UAE — fast,
+                  transparent, and reliable.
                 </p>
               </FadeIn>
               <FadeIn delay={0.24} className="mt-8 flex flex-wrap items-center gap-3">
@@ -95,7 +113,7 @@ export default function Home() {
                 </Link>
               </FadeIn>
               <FadeIn delay={0.32} className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                {["Verified Mechanics", "Transparent Pricing", "Real-Time Tracking", "24/7 Assistance"].map((label) => (
+                {["Verified Mechanics", "Transparent AED Pricing", "Real-Time Tracking", "24/7 Assistance"].map((label) => (
                   <div key={label} className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                     <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-brand-500" aria-hidden="true" />
                     {label}
@@ -155,6 +173,15 @@ export default function Home() {
         {/* Services */}
         <section id="services" className="border-t border-border py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-4">
+            <div className="mx-auto mb-8 max-w-3xl overflow-hidden rounded-2xl border border-border">
+              <Image
+                src="/images/mechanic-workshop.jpg"
+                alt="Professional mechanic working in a service bay"
+                width={1200}
+                height={360}
+                className="h-32 w-full object-cover sm:h-44"
+              />
+            </div>
             <FadeIn className="mx-auto max-w-xl text-center">
               <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">Our Services</h2>
               <p className="mt-2 text-sm text-muted-foreground">Everything your vehicle needs, dispatched directly to your location.</p>
@@ -189,19 +216,31 @@ export default function Home() {
               <p className="mt-2 text-sm text-muted-foreground">From request to repair in four simple steps.</p>
             </FadeIn>
 
-            <Stagger className="relative mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="absolute left-0 right-0 top-6 hidden h-px bg-border lg:block" aria-hidden="true" />
-              {steps.map(({ icon: Icon, title, desc }, i) => (
-                <StaggerItem key={title} className="relative flex flex-col items-center text-center">
-                  <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-brand-500/40 bg-background text-brand-500">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <span className="mt-3 text-xs font-semibold text-brand-400">0{i + 1}</span>
-                  <h3 className="font-heading mt-1 text-base font-semibold text-foreground">{title}</h3>
-                  <p className="mt-1 max-w-[220px] text-sm text-muted-foreground">{desc}</p>
-                </StaggerItem>
-              ))}
-            </Stagger>
+            <div className="mt-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-5">
+              <Stagger className="relative grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-3">
+                {steps.map(({ icon: Icon, title, desc }, i) => (
+                  <StaggerItem key={title} className="relative flex flex-col items-center text-center sm:items-start sm:text-left">
+                    <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-brand-500/40 bg-background text-brand-500">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <span className="mt-3 text-xs font-semibold text-brand-400">0{i + 1}</span>
+                    <h3 className="font-heading mt-1 text-base font-semibold text-foreground">{title}</h3>
+                    <p className="mt-1 max-w-[220px] text-sm text-muted-foreground">{desc}</p>
+                  </StaggerItem>
+                ))}
+              </Stagger>
+
+              <FadeIn delay={0.1} className="relative overflow-hidden rounded-2xl border border-border lg:col-span-2">
+                <Image
+                  src="/images/mechanic-engine-repair.jpg"
+                  alt="Mechanic repairing a car engine at a customer's location"
+                  width={640}
+                  height={720}
+                  className="h-72 w-full object-cover lg:h-full"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+              </FadeIn>
+            </div>
           </div>
         </section>
 
@@ -229,24 +268,119 @@ export default function Home() {
               ))}
             </Stagger>
 
-            <FadeIn className="mt-12 grid grid-cols-2 gap-6 rounded-2xl border border-border bg-surface p-8 text-center sm:grid-cols-4">
-              {[
-                { value: 4200, suffix: "+", label: "Jobs completed" },
-                { value: 350, suffix: "+", label: "Verified mechanics" },
-                { value: 18, suffix: " min", label: "Avg. response" },
-                { value: 4.9, suffix: "/5", label: "Average rating" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="font-heading text-2xl font-bold text-brand-500 sm:text-3xl">
-                    {Number.isInteger(stat.value) ? (
-                      <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                    ) : (
-                      `${stat.value}${stat.suffix}`
-                    )}
+            <FadeIn className="relative mt-12 overflow-hidden rounded-2xl border border-border">
+              <Image
+                src="/images/uae-street-traffic.jpg"
+                alt="Street traffic in the UAE with residential towers"
+                width={1600}
+                height={500}
+                className="h-40 w-full object-cover sm:h-56"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+              <div className="relative grid grid-cols-2 gap-6 p-8 text-center sm:grid-cols-4">
+                {[
+                  { value: 4200, suffix: "+", label: "Jobs completed" },
+                  { value: 350, suffix: "+", label: "Verified mechanics" },
+                  { value: 18, suffix: " min", label: "Avg. response" },
+                  { value: 4.9, suffix: "/5", label: "Average rating" },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <div className="font-heading text-2xl font-bold text-brand-500 sm:text-3xl">
+                      {Number.isInteger(stat.value) ? (
+                        <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                      ) : (
+                        `${stat.value}${stat.suffix}`
+                      )}
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">{stat.label}</p>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{stat.label}</p>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* Mobile app */}
+        <section className="border-t border-border py-16 sm:py-20">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2">
+            <FadeIn>
+              <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
+                Mechanic On Call, <span className="text-brand-500">right in your pocket.</span>
+              </h2>
+              <p className="mt-3 max-w-md text-sm text-muted-foreground sm:text-base">
+                Request help, track your mechanic's live location, chat, and pay — all from one clean,
+                fast mobile experience built for roadside emergencies.
+              </p>
+              <ul className="mt-6 flex flex-col gap-3">
+                {[
+                  "One-tap emergency requests with live GPS",
+                  "Real-time chat and call with your mechanic",
+                  "Secure in-app payments — Cash, Card or PayIt",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-foreground/90">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" /> {item}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/request" className={cn(buttonVariants({ variant: "primary", size: "lg" }), "mt-7")}>
+                Try It Now
+              </Link>
+            </FadeIn>
+
+            <FadeIn delay={0.15} className="flex justify-center">
+              <div className="relative w-[260px] rounded-[2.5rem] border-[6px] border-surface-2 bg-background p-2 shadow-2xl shadow-black/50 ring-1 ring-border">
+                <div className="absolute left-1/2 top-2 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-surface-2" />
+                <div className="relative overflow-hidden rounded-[1.9rem] bg-surface">
+                  <div className="flex items-center justify-between px-5 pb-1 pt-3 text-[10px] text-muted-foreground">
+                    <span>9:41</span>
+                    <div className="flex items-center gap-1">
+                      <Signal className="h-3 w-3" />
+                      <Wifi className="h-3 w-3" />
+                    </div>
+                  </div>
+
+                  <div className="px-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-heading text-sm font-bold text-foreground">Mechanic On Call</span>
+                      <PulseDot />
+                    </div>
+
+                    <div className="mt-3 rounded-xl border border-border bg-surface-2 p-3">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="font-medium text-foreground">Mechanic en route</span>
+                        <span className="text-brand-400">6 min</span>
+                      </div>
+                      <div className="relative mt-2 h-24 overflow-hidden rounded-lg bg-background">
+                        <svg viewBox="0 0 200 100" className="absolute inset-0 h-full w-full opacity-[0.15]">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <line key={i} x1="0" y1={i * 25} x2="200" y2={i * 25} stroke="var(--border)" strokeWidth="1" />
+                          ))}
+                        </svg>
+                        <RouteLine className="absolute left-1/2 top-1/2 h-8 w-32 -translate-x-1/2 -translate-y-1/2" />
+                        <MapPin className="absolute left-[20%] top-[55%] h-4 w-4 text-brand-500" fill="currentColor" />
+                        <span className="absolute right-[18%] top-[30%] flex h-5 w-5 items-center justify-center rounded-full bg-brand-500">
+                          <Wrench className="h-2.5 w-2.5 text-background" />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex flex-col gap-2">
+                      {["Battery Jump Start", "Flat Tire Repair"].map((s) => (
+                        <div key={s} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-[11px] text-foreground/90">
+                          {s} <span className="text-brand-400">AED {s === "Battery Jump Start" ? "80" : "90"}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-around border-t border-border py-3 text-muted-foreground">
+                    <HomeIcon className="h-4 w-4 text-brand-500" />
+                    <MapPin className="h-4 w-4" />
+                    <MessageSquare className="h-4 w-4" />
+                    <User className="h-4 w-4" />
+                  </div>
                 </div>
-              ))}
+              </div>
             </FadeIn>
           </div>
         </section>
@@ -255,36 +389,58 @@ export default function Home() {
         <section className="border-t border-border bg-surface/40 py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-4">
             <FadeIn className="mx-auto max-w-xl text-center">
-              <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">Trusted by Drivers</h2>
+              <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">Trusted by Drivers Across the UAE</h2>
             </FadeIn>
-            <Stagger className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((t) => (
-                <StaggerItem key={t.name}>
-                  <Card className="h-full">
-                    <CardContent className="flex h-full flex-col gap-3">
-                      <div className="flex gap-0.5 text-warning">
-                        {Array.from({ length: t.rating }).map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-warning" />
-                        ))}
-                      </div>
-                      <p className="flex-1 text-sm text-foreground/90">&ldquo;{t.review}&rdquo;</p>
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                        <p className="text-xs text-muted-foreground">{t.vehicle}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </StaggerItem>
-              ))}
-            </Stagger>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-5">
+              <FadeIn delay={0.1} className="relative hidden overflow-hidden rounded-2xl border border-border lg:col-span-2 lg:block">
+                <Image
+                  src="/images/emirati-customer.jpg"
+                  alt="Customer beside their 4x4 at sunset in the UAE"
+                  width={640}
+                  height={800}
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
+              </FadeIn>
+
+              <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-3 lg:grid-cols-1">
+                {testimonials.map((t) => (
+                  <StaggerItem key={t.name}>
+                    <Card className="h-full">
+                      <CardContent className="flex h-full flex-col gap-3">
+                        <div className="flex gap-0.5 text-warning">
+                          {Array.from({ length: t.rating }).map((_, i) => (
+                            <Star key={i} className="h-4 w-4 fill-warning" />
+                          ))}
+                        </div>
+                        <p className="flex-1 text-sm text-foreground/90">&ldquo;{t.review}&rdquo;</p>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                          <p className="text-xs text-muted-foreground">{t.vehicle}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </StaggerItem>
+                ))}
+              </Stagger>
+            </div>
           </div>
         </section>
 
         {/* Final CTA */}
-        <section className="border-t border-border py-16 sm:py-20">
-          <FadeIn className="mx-auto flex max-w-2xl flex-col items-center gap-4 px-4 text-center">
+        <section className="relative overflow-hidden border-t border-border py-16 sm:py-20">
+          <Image
+            src="/images/dune-4x4.jpg"
+            alt="4x4 vehicle on a desert dune in the UAE"
+            fill
+            sizes="100vw"
+            className="object-cover object-center opacity-[0.18]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background" />
+          <FadeIn className="relative mx-auto flex max-w-2xl flex-col items-center gap-4 px-4 text-center">
             <div className="flex items-center gap-1.5 text-sm font-medium text-brand-400">
-              <Clock3 className="h-4 w-4" aria-hidden="true" /> Available 24/7, every day of the year
+              <Clock3 className="h-4 w-4" aria-hidden="true" /> Available 24/7, every day of the year across the UAE
             </div>
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Don&apos;t Let a Breakdown Stop Your Journey.
