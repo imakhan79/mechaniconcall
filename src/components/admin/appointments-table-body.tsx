@@ -21,7 +21,7 @@ export function AppointmentsTableBody({ appointments }: { appointments: Appointm
     return (
       <tbody>
         <tr>
-          <td colSpan={7} className="px-4 py-8 text-center text-neutral-400">
+          <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
             No appointments found.
           </td>
         </tr>
@@ -30,10 +30,10 @@ export function AppointmentsTableBody({ appointments }: { appointments: Appointm
   }
 
   return (
-    <motion.tbody className="divide-y divide-sky-50" variants={container} initial="hidden" animate="show">
+    <motion.tbody className="divide-y divide-brand-500/10" variants={container} initial="hidden" animate="show">
       {appointments.map((a) => (
-        <motion.tr key={a.id} variants={row} className="transition-colors hover:bg-sky-50/50">
-          <td className="px-4 py-3 font-medium text-neutral-900">#{a.id}</td>
+        <motion.tr key={a.id} variants={row} className="transition-colors hover:bg-surface-2">
+          <td className="px-4 py-3 font-medium text-foreground">#{a.id}</td>
           <td className="px-4 py-3">{a.car_number}</td>
           <td className="px-4 py-3">{a.owner_name}</td>
           <td className="px-4 py-3">{a.owner_mobile}</td>
@@ -44,7 +44,7 @@ export function AppointmentsTableBody({ appointments }: { appointments: Appointm
             </Badge>
           </td>
           <td className="px-4 py-3 text-right">
-            <Link href={`/admin/appointments/${a.id}`} className="text-sm font-medium text-sky-700 hover:underline">
+            <Link href={`/admin/appointments/${a.id}`} className="text-sm font-medium text-brand-500 hover:underline">
               Open
             </Link>
           </td>

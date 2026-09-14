@@ -14,7 +14,7 @@ export default async function CustomerProfilePage() {
 
   return (
     <div className="mx-auto max-w-md">
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Profile</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Profile</h1>
       <ProfileForm userId={user!.id} fullName={profile?.full_name ?? ""} phone={profile?.phone ?? null} />
     </div>
   );

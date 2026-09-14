@@ -132,13 +132,13 @@ export function RequestWizard({
             <span
               className={cn(
                 "flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
-                i === step ? "bg-sky-700 text-white" : i < step ? "bg-sky-100 text-sky-800" : "bg-neutral-100 text-neutral-400"
+                i === step ? "bg-brand-500 text-white" : i < step ? "bg-border text-brand-600" : "bg-surface-2 text-muted-foreground"
               )}
             >
               {i + 1}
             </span>
-            <span className={cn("text-xs font-medium", i === step ? "text-neutral-900" : "text-neutral-400")}>{label}</span>
-            {i < STEPS.length - 1 && <span className="h-px w-4 bg-neutral-200" aria-hidden="true" />}
+            <span className={cn("text-xs font-medium", i === step ? "text-foreground" : "text-muted-foreground")}>{label}</span>
+            {i < STEPS.length - 1 && <span className="h-px w-4 bg-border" aria-hidden="true" />}
           </li>
         ))}
       </ol>
@@ -156,8 +156,8 @@ export function RequestWizard({
                 exit="exit"
                 transition={{ duration: 0.3, ease: EASE }}
               >
-                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                  <MapPin className="h-4 w-4 text-sky-700" aria-hidden="true" /> Where do you need help?
+                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <MapPin className="h-4 w-4 text-brand-500" aria-hidden="true" /> Where do you need help?
                 </h2>
 
                 <Button
@@ -171,8 +171,8 @@ export function RequestWizard({
                   Use my current location
                 </Button>
 
-                <div className="my-3 flex items-center gap-3 text-xs text-neutral-400">
-                  <span className="h-px flex-1 bg-neutral-200" /> or search <span className="h-px flex-1 bg-neutral-200" />
+                <div className="my-3 flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="h-px flex-1 bg-border" /> or search <span className="h-px flex-1 bg-border" />
                 </div>
 
                 <div className="relative">
@@ -186,20 +186,20 @@ export function RequestWizard({
                     type="button"
                     onClick={handleSearch}
                     aria-label="Search"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-sky-700"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-brand-500"
                   >
                     {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                   </button>
                 </div>
 
                 {searchResults.length > 0 && (
-                  <ul className="mt-2 flex flex-col divide-y divide-neutral-100 rounded-lg border border-neutral-200">
+                  <ul className="mt-2 flex flex-col divide-y divide-surface-2 rounded-lg border border-border">
                     {searchResults.map((r) => (
                       <li key={`${r.lat}-${r.lng}`}>
                         <button
                           type="button"
                           onClick={() => pickSearchResult(r)}
-                          className="block w-full px-3 py-2 text-left text-sm text-neutral-700 hover:bg-sky-50"
+                          className="block w-full px-3 py-2 text-left text-sm text-foreground/90 hover:bg-brand-500/10"
                         >
                           {r.label}
                         </button>
@@ -213,7 +213,7 @@ export function RequestWizard({
                     <div className="h-40 overflow-hidden rounded-lg">
                       <LiveMap center={position} zoom={15} markers={[{ id: "loc", lat: position.lat, lng: position.lng }]} />
                     </div>
-                    <p className="text-xs text-neutral-500">{address}</p>
+                    <p className="text-xs text-muted-foreground">{address}</p>
                   </div>
                 )}
 
@@ -233,14 +233,14 @@ export function RequestWizard({
                 exit="exit"
                 transition={{ duration: 0.3, ease: EASE }}
               >
-                <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                  <Car className="h-4 w-4 text-sky-700" aria-hidden="true" /> Vehicle
+                <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <Car className="h-4 w-4 text-brand-500" aria-hidden="true" /> Vehicle
                 </h2>
                 {vehicles.length > 0 ? (
                   <select
                     value={vehicleId ?? ""}
                     onChange={(e) => setVehicleId(e.target.value || null)}
-                    className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-700"
+                    className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm text-foreground/90"
                   >
                     {vehicles.map((v) => (
                       <option key={v.id} value={v.id}>
@@ -249,17 +249,17 @@ export function RequestWizard({
                     ))}
                   </select>
                 ) : (
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-muted-foreground">
                     No vehicles on file yet — add one from your{" "}
-                    <a href="/customer/vehicles" className="font-medium text-sky-700 hover:underline">
+                    <a href="/customer/vehicles" className="font-medium text-brand-500 hover:underline">
                       Vehicles page
                     </a>{" "}
                     first, or continue without selecting one.
                   </p>
                 )}
 
-                <h2 className="mb-3 mt-5 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                  <Wrench className="h-4 w-4 text-sky-700" aria-hidden="true" /> Service
+                <h2 className="mb-3 mt-5 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <Wrench className="h-4 w-4 text-brand-500" aria-hidden="true" /> Service
                 </h2>
                 <div className="grid grid-cols-2 gap-2">
                   {categories.map((c) => (
@@ -270,12 +270,12 @@ export function RequestWizard({
                       className={cn(
                         "rounded-lg border px-3 py-3 text-left text-sm font-medium transition-colors",
                         categoryId === c.id
-                          ? "border-sky-700 bg-sky-50 text-sky-800"
-                          : "border-neutral-200 text-neutral-700 hover:border-sky-300"
+                          ? "border-brand-500 bg-brand-500/10 text-brand-600"
+                          : "border-border text-foreground/90 hover:border-brand-400"
                       )}
                     >
                       {c.name}
-                      <span className="mt-0.5 block text-xs font-normal text-neutral-400">from Rs {c.base_price}</span>
+                      <span className="mt-0.5 block text-xs font-normal text-muted-foreground">from Rs {c.base_price}</span>
                     </button>
                   ))}
                 </div>
@@ -301,25 +301,25 @@ export function RequestWizard({
                 exit="exit"
                 transition={{ duration: 0.3, ease: EASE }}
               >
-                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                  <Wrench className="h-4 w-4 text-sky-700" aria-hidden="true" /> Details
+                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <Wrench className="h-4 w-4 text-brand-500" aria-hidden="true" /> Details
                 </h2>
 
-                <label className="mb-1 block text-sm font-medium text-neutral-700">What&apos;s wrong? (optional)</label>
+                <label className="mb-1 block text-sm font-medium text-foreground/90">What&apos;s wrong? (optional)</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
                   placeholder="e.g. Car won't start, battery might be dead"
                 />
 
-                <label className="mb-1 mt-3 block text-sm font-medium text-neutral-700">Photo (optional)</label>
+                <label className="mb-1 mt-3 block text-sm font-medium text-foreground/90">Photo (optional)</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
-                  className="block w-full text-sm text-neutral-500 file:mr-3 file:rounded-lg file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-sky-700"
+                  className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-500"
                 />
 
                 <button
@@ -327,7 +327,7 @@ export function RequestWizard({
                   onClick={() => setIsEmergency((v) => !v)}
                   className={cn(
                     "mt-4 flex w-full items-center gap-2 rounded-lg border px-3 py-3 text-left text-sm font-medium transition-colors",
-                    isEmergency ? "border-red-500 bg-red-50 text-red-700" : "border-neutral-200 text-neutral-600"
+                    isEmergency ? "border-red-500 bg-red-50 text-red-700" : "border-border text-muted-foreground"
                   )}
                 >
                   <AlertTriangle className="h-4 w-4" aria-hidden="true" />

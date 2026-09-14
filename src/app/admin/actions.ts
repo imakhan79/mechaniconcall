@@ -83,3 +83,49 @@ export async function markAppointmentFixed(formData: FormData) {
   revalidatePath("/admin");
   return { ok: true as const };
 }
+
+export async function adminCancelRequest(requestId: number) {
+  const supabase = await requireAdmin();
+  const { error } = await supabase
+    .from("service_requests")
+    .update({ status: "CANCELLED", cancelled_at: new Date().toISOString() })
+    .eq("id", requestId);
+  if (error) return { ok: false as const, error: "Could not cancel this booking." };
+  revalidatePath("/admin/requests");
+  return { ok: true as const };
+}
+
+export async function adminAssignMechanic(requestId: number, mechanicId: string) {
+  const supabase = await requireAdmin();
+  const { error } = await supabase
+    .from("service_requests")
+    .update({ mechanic_id: mechanicId, status: "MECHANIC_ASSIGNED" })
+    .eq("id", requestId);
+  if (error) return { ok: false as const, error: "Could not assign a mechanic." };
+  revalidatePath("/admin/requests");
+  return { ok: true as const };
+}
+
+export async function adminUpdateServiceCategory(formData: FormData) {
+  const id = String(formData.get("id"));
+  const basePrice = Number(formData.get("base_price"));
+  const isEmergency = formData.get("is_emergency") === "on";
+  if (!id || Number.isNaN(basePrice)) return { ok: false as const, error: "Invalid input." };
+
+  const supabase = await requireAdmin();
+  const { error } = await supabase
+    .from("service_categories")
+    .update({ base_price: basePrice, is_emergency: isEmergency })
+    .eq("id", id);
+  if (error) return { ok: false as const, error: "Could not update pricing." };
+  revalidatePath("/admin/pricing");
+  return { ok: true as const };
+}
+
+export async function adminUpdateTicketStatus(ticketId: string, status: "open" | "in_progress" | "resolved" | "closed") {
+  const supabase = await requireAdmin();
+  const { error } = await supabase.from("support_tickets").update({ status }).eq("id", ticketId);
+  if (error) return { ok: false as const, error: "Could not update ticket." };
+  revalidatePath("/admin/support");
+  return { ok: true as const };
+}

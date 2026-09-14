@@ -32,16 +32,16 @@ export default async function AdminAppointmentsPage({
   return (
     <div>
       <FadeIn>
-        <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Appointment Requests</h1>
+        <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Appointment Requests</h1>
       </FadeIn>
 
-      <Suspense fallback={<div className="h-[52px] rounded-xl border border-sky-100 bg-white" />}>
+      <Suspense fallback={<div className="h-[52px] rounded-xl border border-border bg-surface" />}>
         <AppointmentFilters />
       </Suspense>
 
-      <div className="mt-4 overflow-x-auto rounded-2xl border border-sky-100 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(2,132,199,0.18)]">
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-surface shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(2,132,199,0.18)]">
         <table className="w-full min-w-[640px] text-sm">
-          <thead className="bg-sky-50/60 text-left text-xs font-semibold uppercase text-neutral-500">
+          <thead className="bg-surface-2 text-left text-xs font-semibold uppercase text-muted-foreground">
             <tr>
               <th className="px-4 py-3">ID</th>
               <th className="px-4 py-3">Car No.</th>

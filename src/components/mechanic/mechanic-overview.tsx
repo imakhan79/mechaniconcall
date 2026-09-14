@@ -128,14 +128,14 @@ export function MechanicOverview({
       <Card>
         <CardContent className="flex items-center justify-between p-4">
           <div>
-            <p className="text-sm font-semibold text-neutral-900">{isOnline ? "You're Online" : "You're Offline"}</p>
-            <p className="text-xs text-neutral-500">{isOnline ? "Visible to nearby customers" : "Go online to receive requests"}</p>
+            <p className="text-sm font-semibold text-foreground">{isOnline ? "You're Online" : "You're Offline"}</p>
+            <p className="text-xs text-muted-foreground">{isOnline ? "Visible to nearby customers" : "Go online to receive requests"}</p>
           </div>
           <Button
             variant={isOnline ? "accent" : "outline"}
             disabled={toggling}
             onClick={handleToggleOnline}
-            className={cn(isOnline && "bg-emerald-600 hover:bg-emerald-700")}
+            className={cn(isOnline && "bg-success hover:bg-success")}
           >
             <Power className="h-4 w-4" aria-hidden="true" /> {isOnline ? "Online" : "Go Online"}
           </Button>
@@ -150,14 +150,14 @@ export function MechanicOverview({
 
       {assignedRequests.length > 0 && (
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-900">Requests Sent to You</h2>
+          <h2 className="mb-2 text-sm font-semibold text-foreground">Requests Sent to You</h2>
           <ul className="flex flex-col gap-2">
             {assignedRequests.map((r) => (
-              <li key={r.id} className="rounded-xl border border-sky-200 bg-sky-50 p-4">
-                <p className="text-sm font-medium text-sky-900">
+              <li key={r.id} className="rounded-xl border border-border bg-brand-500/10 p-4">
+                <p className="text-sm font-medium text-foreground">
                   {r.customer_profile?.full_name || "Customer"} · Request #{r.id}
                 </p>
-                <p className="text-xs text-sky-700">{r.address}</p>
+                <p className="text-xs text-brand-500">{r.address}</p>
                 <div className="mt-2 flex gap-2">
                   <Button size="sm" variant="outline" disabled={busy} onClick={() => handleRespond(r.id, false)}>
                     Reject
@@ -174,14 +174,14 @@ export function MechanicOverview({
 
       {isOnline && (
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-900">Incoming Requests Nearby</h2>
-          {openRequests.length === 0 && <p className="text-sm text-neutral-400">No open requests nearby right now.</p>}
+          <h2 className="mb-2 text-sm font-semibold text-foreground">Incoming Requests Nearby</h2>
+          {openRequests.length === 0 && <p className="text-sm text-muted-foreground">No open requests nearby right now.</p>}
           <ul className="flex flex-col gap-2">
             {openRequests.map((r) => (
-              <li key={r.id} className="flex items-center justify-between rounded-xl border border-neutral-200 p-4">
+              <li key={r.id} className="flex items-center justify-between rounded-xl border border-border p-4">
                 <div>
-                  <p className="text-sm font-medium text-neutral-900">Request #{r.id}</p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-sm font-medium text-foreground">Request #{r.id}</p>
+                  <p className="text-xs text-muted-foreground">
                     {r.distanceKm.toFixed(1)} km away{r.is_emergency ? " · Emergency" : ""}
                   </p>
                 </div>
@@ -201,9 +201,9 @@ function StatTile({ icon: Icon, label, value }: { icon: typeof Briefcase; label:
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-        <Icon className="h-5 w-5 text-sky-700" aria-hidden="true" />
-        <span className="text-lg font-bold text-neutral-900">{value}</span>
-        <span className="text-xs text-neutral-500">{label}</span>
+        <Icon className="h-5 w-5 text-brand-500" aria-hidden="true" />
+        <span className="text-lg font-bold text-foreground">{value}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
   );

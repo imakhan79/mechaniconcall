@@ -1,32 +1,32 @@
 import type { Metadata } from "next";
-import { Poppins, Open_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import { MotionConfig } from "framer-motion";
 import "./globals.css";
 
-const poppins = Poppins({
+const inter = Inter({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const openSans = Open_Sans({
+const interBody = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "Mechanic On Call — Trusted Vehicle Service & Repair",
+  title: "Mechanic On Call — Professional Help, Wherever You Need It",
   description:
-    "Book a maintenance or repair appointment with our workshop: pick a date and time, and we'll confirm it with you.",
+    "Request a verified mechanic to your location for roadside assistance, emergency repairs, diagnostics, and vehicle maintenance.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${openSans.variable} h-full antialiased`}
+      className={`${inter.variable} ${interBody.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground" suppressHydrationWarning>
         <MotionConfig reducedMotion="user" transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}>

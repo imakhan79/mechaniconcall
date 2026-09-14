@@ -1,13 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f0f9ff;
-  --foreground: #0f172a;
+  --background: #0a0d10;
+  --surface: #12161b;
+  --surface-2: #191e24;
+  --border: #262c33;
+  --foreground: #f5f7fa;
+  --muted-foreground: #98a2ad;
+
+  --brand-300: #c4f542;
+  --brand-400: #a8e62e;
+  --brand-500: #8ed600;
+  --brand-600: #72b300;
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
   --font-sans: var(--font-body);
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
@@ -21,4 +50,13 @@ body {
 
 h1, h2, h3, h4, .font-heading {
   font-family: var(--font-heading), var(--font-body), sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

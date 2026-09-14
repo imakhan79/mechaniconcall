@@ -58,7 +58,7 @@ export function AppointmentCalendar({
           disabled={isCurrentMonth}
           aria-label="Previous month"
           whileTap={isCurrentMonth ? undefined : { scale: 0.9 }}
-          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-neutral-600 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-brand-500/10 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
         >
           <ChevronLeft className="h-5 w-5" />
         </motion.button>
@@ -70,7 +70,7 @@ export function AppointmentCalendar({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: monthDirection > 0 ? -16 : 16 }}
             transition={{ duration: 0.2, ease: EASE }}
-            className="text-base font-semibold text-neutral-900"
+            className="text-base font-semibold text-foreground"
           >
             {format(viewMonth, "MMMM yyyy")}
           </motion.p>
@@ -80,13 +80,13 @@ export function AppointmentCalendar({
           onClick={() => changeMonth(1)}
           aria-label="Next month"
           whileTap={{ scale: 0.9 }}
-          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-neutral-600 hover:bg-sky-50"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-muted-foreground hover:bg-brand-500/10"
         >
           <ChevronRight className="h-5 w-5" />
         </motion.button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-neutral-400">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-muted-foreground">
         {WEEKDAYS.map((d) => (
           <div key={d} className="py-1">
             {d}
@@ -116,15 +116,15 @@ export function AppointmentCalendar({
                 "relative flex h-11 w-full items-center justify-center rounded-lg text-sm font-medium transition-colors sm:h-12",
                 !inMonth && "invisible",
                 inMonth && !disabled && "cursor-pointer",
-                inMonth && !disabled && !selected && "text-neutral-800 hover:bg-sky-50",
-                disabled && inMonth && "cursor-not-allowed text-neutral-300 line-through",
-                isToday(day) && !selected && "ring-1 ring-inset ring-sky-300"
+                inMonth && !disabled && !selected && "text-foreground hover:bg-brand-500/10",
+                disabled && inMonth && "cursor-not-allowed text-border line-through",
+                isToday(day) && !selected && "ring-1 ring-inset ring-brand-400"
               )}
             >
               {selected && (
                 <motion.span
                   layoutId="selected-day"
-                  className="absolute inset-0 rounded-lg bg-sky-700 shadow-sm"
+                  className="absolute inset-0 rounded-lg bg-brand-500 shadow-sm"
                   transition={{ type: "spring", stiffness: 500, damping: 32 }}
                 />
               )}
@@ -134,12 +134,12 @@ export function AppointmentCalendar({
         })}
       </div>
 
-      <div className="mt-3 flex items-center gap-4 text-xs text-neutral-500">
+      <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-sky-700" /> Selected
+          <span className="h-2.5 w-2.5 rounded-full bg-brand-500" /> Selected
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-neutral-200" /> Unavailable
+          <span className="h-2.5 w-2.5 rounded-full bg-border" /> Unavailable
         </span>
       </div>
     </div>

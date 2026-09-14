@@ -16,7 +16,7 @@ export default async function RequestPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-10">
-      <h1 className="mb-6 text-center font-heading text-xl font-bold text-neutral-900">Request a Mechanic</h1>
+      <h1 className="mb-6 text-center font-heading text-xl font-bold text-foreground">Request a Mechanic</h1>
       <RequestWizard customerId={user.id} vehicles={vehicles ?? []} categories={categories ?? []} />
     </div>
   );

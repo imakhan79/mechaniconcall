@@ -68,18 +68,18 @@ export function VehiclesManager({ customerId, vehicles }: { customerId: string; 
     <div className="flex flex-col gap-4">
       <Card>
         <CardContent className="p-5">
-          <ul className="flex flex-col divide-y divide-neutral-100">
+          <ul className="flex flex-col divide-y divide-surface-2">
             {vehicles.map((v) => (
               <li key={v.id} className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-50 text-sky-700">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
                     <Car className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-neutral-900">
+                    <p className="text-sm font-medium text-foreground">
                       {v.make} {v.model} {v.year ? `(${v.year})` : ""}
                     </p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-xs text-muted-foreground">
                       {v.registration_number} · <span className="capitalize">{v.vehicle_type}</span>
                     </p>
                   </div>
@@ -89,25 +89,25 @@ export function VehiclesManager({ customerId, vehicles }: { customerId: string; 
                   aria-label={`Remove ${v.make} ${v.model}`}
                   disabled={pending}
                   onClick={() => handleDelete(v.id, `${v.make} ${v.model}`)}
-                  className="text-neutral-400 hover:text-red-600 disabled:opacity-50"
+                  className="text-muted-foreground hover:text-red-600 disabled:opacity-50"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </li>
             ))}
-            {vehicles.length === 0 && <li className="py-3 text-sm text-neutral-400">No vehicles added yet.</li>}
+            {vehicles.length === 0 && <li className="py-3 text-sm text-muted-foreground">No vehicles added yet.</li>}
           </ul>
         </CardContent>
       </Card>
 
       <Card>
         <CardContent className="p-5">
-          <h2 className="mb-3 text-sm font-semibold text-neutral-900">Add a Vehicle</h2>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">Add a Vehicle</h2>
           <form onSubmit={handleAdd} className="grid grid-cols-2 gap-3">
             <select
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value as VehicleType)}
-              className="col-span-2 h-11 rounded-lg border border-neutral-300 bg-white px-3 text-sm capitalize text-neutral-700 sm:col-span-1"
+              className="col-span-2 h-11 rounded-lg border border-border bg-surface px-3 text-sm capitalize text-foreground/90 sm:col-span-1"
             >
               {VEHICLE_TYPES.map((t) => (
                 <option key={t} value={t} className="capitalize">

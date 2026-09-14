@@ -18,14 +18,14 @@ export default async function MechanicJobsPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Jobs</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Jobs</h1>
       <Card>
-        <CardContent className="divide-y divide-neutral-100 p-0">
+        <CardContent className="divide-y divide-surface-2 p-0">
           {(requests ?? []).map((r) => (
-            <Link key={r.id} href={`/mechanic/job/${r.id}`} className="flex items-center justify-between p-4 hover:bg-neutral-50">
+            <Link key={r.id} href={`/mechanic/job/${r.id}`} className="flex items-center justify-between p-4 hover:bg-surface-2">
               <div>
-                <p className="text-sm font-medium text-neutral-900">Job #{r.id}</p>
-                <p className="flex items-center gap-1 text-xs text-neutral-400">
+                <p className="text-sm font-medium text-foreground">Job #{r.id}</p>
+                <p className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Clock className="h-3 w-3" aria-hidden="true" /> {format(new Date(r.created_at), "d MMM yyyy, h:mm a")}
                 </p>
               </div>
@@ -35,7 +35,7 @@ export default async function MechanicJobsPage() {
             </Link>
           ))}
           {(!requests || requests.length === 0) && (
-            <p className="p-5 text-center text-sm text-neutral-400">No jobs yet — go online to start receiving requests.</p>
+            <p className="p-5 text-center text-sm text-muted-foreground">No jobs yet — go online to start receiving requests.</p>
           )}
         </CardContent>
       </Card>

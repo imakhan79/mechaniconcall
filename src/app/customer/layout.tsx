@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Car, History, LayoutDashboard, MessageCircle, User } from "lucide-react";
+import { Bell, Car, CreditCard, History, LayoutDashboard, LifeBuoy, MessageCircle, Star, User } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardShell, type NavItem } from "@/components/layout/dashboard-shell";
 
@@ -7,8 +7,12 @@ const iconClass = "h-4 w-4";
 const navItems: NavItem[] = [
   { href: "/customer", label: "Overview", icon: <LayoutDashboard className={iconClass} aria-hidden="true" /> },
   { href: "/customer/vehicles", label: "Vehicles", icon: <Car className={iconClass} aria-hidden="true" /> },
-  { href: "/customer/history", label: "History", icon: <History className={iconClass} aria-hidden="true" /> },
+  { href: "/customer/history", label: "Bookings", icon: <History className={iconClass} aria-hidden="true" /> },
+  { href: "/customer/payments", label: "Payments", icon: <CreditCard className={iconClass} aria-hidden="true" /> },
+  { href: "/customer/reviews", label: "Reviews", icon: <Star className={iconClass} aria-hidden="true" /> },
   { href: "/customer/messages", label: "Messages", icon: <MessageCircle className={iconClass} aria-hidden="true" /> },
+  { href: "/customer/notifications", label: "Notifications", icon: <Bell className={iconClass} aria-hidden="true" /> },
+  { href: "/customer/support", label: "Support", icon: <LifeBuoy className={iconClass} aria-hidden="true" /> },
   { href: "/customer/profile", label: "Profile", icon: <User className={iconClass} aria-hidden="true" /> },
 ];
 

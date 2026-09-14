@@ -61,7 +61,7 @@ export type RequestStatus =
   | "PAID"
   | "CANCELLED";
 export type EstimateStatus = "pending" | "approved" | "rejected";
-export type PaymentMethod = "cash" | "card" | "jazzcash" | "easypaisa" | "bank" | "online";
+export type PaymentMethod = "cash" | "card" | "jazzcash" | "easypaisa" | "bank" | "online" | "payit";
 export type PaymentStatus = "pending" | "completed" | "failed";
 export type PayoutStatus = "requested" | "paid" | "rejected";
 
@@ -296,6 +296,22 @@ export interface Notification {
   data: Record<string, unknown>;
   read_at: string | null;
   created_at: string;
+}
+
+export type SupportTicketStatus = "open" | "in_progress" | "resolved" | "closed";
+export type SupportTicketPriority = "low" | "normal" | "high" | "urgent";
+
+export interface SupportTicket {
+  id: string;
+  user_id: string;
+  request_id: number | null;
+  subject: string;
+  category: string;
+  priority: SupportTicketPriority;
+  status: SupportTicketStatus;
+  message: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface EmergencyRequest {

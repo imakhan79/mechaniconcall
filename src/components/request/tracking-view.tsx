@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, MapPin, Star, X } from "lucide-react";
+import { CheckCircle2, MapPin, Phone, Star, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import { LiveMap } from "@/components/map/live-map";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { cn } from "@/lib/utils";
 import { haversineKm } from "@/lib/geo";
+import { formatAED } from "@/lib/currency";
 import type {
   EstimateItem,
   Mechanic,
@@ -222,20 +223,20 @@ export function TrackingView({
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
-            <h1 className="font-heading text-lg font-bold text-neutral-900">Request #{request.id}</h1>
+            <h1 className="font-heading text-lg font-bold text-foreground">Request #{request.id}</h1>
             <Badge variant={request.status === "CANCELLED" ? "danger" : request.status === "PAID" ? "success" : "info"}>
               {STATUS_LABELS[request.status] ?? request.status}
             </Badge>
           </div>
           {request.address && (
-            <p className="mt-1 flex items-center gap-1 text-xs text-neutral-500">
+            <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
               <MapPin className="h-3 w-3" aria-hidden="true" /> {request.address}
             </p>
           )}
         </CardContent>
       </Card>
 
-      <div className="h-56 overflow-hidden rounded-xl border border-neutral-200">
+      <div className="h-56 overflow-hidden rounded-xl border border-border">
         <LiveMap
           center={{ lat: request.lat, lng: request.lng }}
           zoom={13}
@@ -246,14 +247,14 @@ export function TrackingView({
       {request.status === "SEARCHING" && !request.mechanic_id && (
         <Card>
           <CardContent className="p-4">
-            <h2 className="mb-3 text-sm font-semibold text-neutral-900">Nearby Mechanics</h2>
-            {nearby.length === 0 && <p className="text-sm text-neutral-400">Looking for available mechanics nearby...</p>}
+            <h2 className="mb-3 text-sm font-semibold text-foreground">Nearby Mechanics</h2>
+            {nearby.length === 0 && <p className="text-sm text-muted-foreground">Looking for available mechanics nearby...</p>}
             <ul className="flex flex-col gap-2">
               {nearby.map((m) => (
-                <li key={m.id} className="flex items-center justify-between rounded-lg border border-neutral-200 p-3">
+                <li key={m.id} className="flex items-center justify-between rounded-lg border border-border p-3">
                   <div>
-                    <p className="text-sm font-medium text-neutral-900">{m.business_name || m.profile?.full_name}</p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-sm font-medium text-foreground">{m.business_name || m.profile?.full_name}</p>
+                    <p className="text-xs text-muted-foreground">
                       {m.distanceKm.toFixed(1)} km away · ⭐ {m.rating_avg.toFixed(1)} ({m.rating_count})
                     </p>
                   </div>
@@ -270,12 +271,19 @@ export function TrackingView({
       {mechanicProfile && (
         <Card>
           <CardContent className="p-4">
-            <h2 className="mb-1 text-sm font-semibold text-neutral-900">Your Mechanic</h2>
-            <p className="text-sm text-neutral-700">{mechanicProfile.business_name || mechanicProfile.profile?.full_name}</p>
-            <p className="text-xs text-neutral-500">
+            <h2 className="mb-1 text-sm font-semibold text-foreground">Your Mechanic</h2>
+            <p className="text-sm text-foreground/80">{mechanicProfile.business_name || mechanicProfile.profile?.full_name}</p>
+            <p className="text-xs text-muted-foreground">
               ⭐ {mechanicProfile.rating_avg.toFixed(1)} ({mechanicProfile.rating_count} reviews)
-              {mechanicProfile.profile?.phone && ` · ${mechanicProfile.profile.phone}`}
             </p>
+            {mechanicProfile.profile?.phone && (
+              <a
+                href={`tel:${mechanicProfile.profile.phone}`}
+                className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-brand-400 hover:underline"
+              >
+                <Phone className="h-3.5 w-3.5" aria-hidden="true" /> {mechanicProfile.profile.phone}
+              </a>
+            )}
           </CardContent>
         </Card>
       )}
@@ -283,20 +291,20 @@ export function TrackingView({
       {estimate && (
         <Card>
           <CardContent className="p-4">
-            <h2 className="mb-2 text-sm font-semibold text-neutral-900">Repair Estimate</h2>
-            <ul className="mb-2 flex flex-col divide-y divide-neutral-100 text-sm">
+            <h2 className="mb-2 text-sm font-semibold text-foreground">Repair Estimate</h2>
+            <ul className="mb-2 flex flex-col divide-y divide-border text-sm">
               {estimate.items.map((item) => (
                 <li key={item.id} className="flex justify-between py-1.5">
-                  <span className="text-neutral-600">
+                  <span className="text-muted-foreground">
                     {item.name} × {item.quantity}
                   </span>
-                  <span className="font-medium text-neutral-900">Rs {(item.quantity * item.unit_price).toFixed(0)}</span>
+                  <span className="font-medium text-foreground">{formatAED(item.quantity * item.unit_price)}</span>
                 </li>
               ))}
             </ul>
-            <div className="flex justify-between border-t border-neutral-200 pt-2 text-sm font-semibold text-neutral-900">
+            <div className="flex justify-between border-t border-border pt-2 text-sm font-semibold text-foreground">
               <span>Total</span>
-              <span>Rs {estimate.grand_total.toFixed(0)}</span>
+              <span>{formatAED(estimate.grand_total)}</span>
             </div>
             {estimate.status === "pending" && (
               <div className="mt-3 flex gap-2">
@@ -315,18 +323,18 @@ export function TrackingView({
       {request.status === "PAYMENT_PENDING" && (
         <Card>
           <CardContent className="p-4">
-            <h2 className="mb-2 text-sm font-semibold text-neutral-900">Payment</h2>
-            <p className="mb-3 text-sm text-neutral-600">
-              Amount due: <span className="font-semibold text-neutral-900">Rs {(request.final_price ?? request.estimated_price ?? 0).toFixed(0)}</span>
+            <h2 className="mb-2 text-sm font-semibold text-foreground">Payment</h2>
+            <p className="mb-3 text-sm text-muted-foreground">
+              Amount due: <span className="font-semibold text-foreground">{formatAED(request.final_price ?? request.estimated_price)}</span>
             </p>
             <select
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-              className="mb-3 h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm capitalize text-neutral-700"
+              className="mb-3 h-11 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm capitalize text-foreground"
             >
-              {(["cash", "card", "jazzcash", "easypaisa", "bank", "online"] as PaymentMethod[]).map((m) => (
+              {(["cash", "card", "payit", "bank"] as PaymentMethod[]).map((m) => (
                 <option key={m} value={m} className="capitalize">
-                  {m}
+                  {m === "payit" ? "PayIt" : m}
                 </option>
               ))}
             </select>
@@ -344,7 +352,7 @@ export function TrackingView({
       {request.mechanic_id && request.status !== "CANCELLED" && <ChatPanel requestId={request.id} userId={customerId} />}
 
       {CANCELLABLE.has(request.status) && (
-        <Button variant="outline" disabled={busy} onClick={handleCancel} className="text-red-600 hover:bg-red-50">
+        <Button variant="outline" disabled={busy} onClick={handleCancel} className="text-danger hover:bg-danger/10">
           Cancel Request
         </Button>
       )}
@@ -393,11 +401,11 @@ function RatingCard({
   return (
     <Card>
       <CardContent className="p-4">
-        <h2 className="mb-2 text-sm font-semibold text-neutral-900">Rate this mechanic</h2>
+        <h2 className="mb-2 text-sm font-semibold text-foreground">Rate this mechanic</h2>
         <div className="mb-3 flex gap-1">
           {[1, 2, 3, 4, 5].map((n) => (
             <button key={n} type="button" onClick={() => setOverall(n)} aria-label={`${n} stars`}>
-              <Star className={cn("h-6 w-6", n <= overall ? "fill-amber-400 text-amber-400" : "text-neutral-300")} />
+              <Star className={cn("h-6 w-6", n <= overall ? "fill-warning text-warning" : "text-border")} />
             </button>
           ))}
         </div>
@@ -406,7 +414,7 @@ function RatingCard({
           onChange={(e) => setReview(e.target.value)}
           rows={2}
           placeholder="Leave a review (optional)"
-          className="mb-3 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
+          className="mb-3 w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         />
         <Button variant="primary" className="w-full" disabled={submitting} onClick={handleSubmit}>
           Submit Rating

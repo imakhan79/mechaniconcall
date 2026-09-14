@@ -1,6 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// Refreshes the Supabase auth session cookie on every request so server
+// components (which can only read cookies, never write them — see
+// src/lib/supabase/server.ts) always see a valid session.
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 

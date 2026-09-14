@@ -1,6 +1,7 @@
 import { AlertTriangle, CheckCircle2, DollarSign, Star, Users, Wrench, XCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatAED } from "@/lib/currency";
 
 export default async function AdminAnalyticsPage() {
   const supabase = await createClient();
@@ -29,14 +30,14 @@ export default async function AdminAnalyticsPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Analytics</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Analytics</h1>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat icon={Users} label="Customers" value={customerCount ?? 0} />
         <Stat icon={Wrench} label="Mechanics" value={mechanicCount ?? 0} />
         <Stat icon={CheckCircle2} label="Completed" value={completed} />
         <Stat icon={XCircle} label="Cancelled" value={`${cancellationRate.toFixed(0)}%`} />
         <Stat icon={AlertTriangle} label="Emergencies" value={emergencies} />
-        <Stat icon={DollarSign} label="Revenue" value={`Rs ${revenue.toFixed(0)}`} />
+        <Stat icon={DollarSign} label="Revenue" value={formatAED(revenue)} />
         <Stat icon={Star} label="Avg Rating" value={avgRating.toFixed(1)} />
         <Stat icon={Wrench} label="Total Requests" value={totalRequests} />
       </div>
@@ -48,9 +49,9 @@ function Stat({ icon: Icon, label, value }: { icon: typeof Users; label: string;
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-        <Icon className="h-5 w-5 text-sky-700" aria-hidden="true" />
-        <span className="text-lg font-bold text-neutral-900">{value}</span>
-        <span className="text-xs text-neutral-500">{label}</span>
+        <Icon className="h-5 w-5 text-brand-500" aria-hidden="true" />
+        <span className="text-lg font-bold text-foreground">{value}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
   );

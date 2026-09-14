@@ -14,8 +14,8 @@ export default async function PricingPage() {
       <SiteHeader />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12">
         <FadeIn className="mb-8 text-center">
-          <h1 className="font-heading text-2xl font-bold text-neutral-900 sm:text-3xl">Pricing</h1>
-          <p className="mt-2 text-sm text-neutral-500">
+          <h1 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">Pricing</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             Starting prices for common services — final cost depends on your vehicle and issue.
           </p>
         </FadeIn>
@@ -25,12 +25,12 @@ export default async function PricingPage() {
             <StaggerItem key={c.id}>
               <Card>
                 <CardContent className="flex items-start gap-3 p-5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-sky-700">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
                     {c.is_emergency ? <AlertTriangle className="h-5 w-5" aria-hidden="true" /> : <Wrench className="h-5 w-5" aria-hidden="true" />}
                   </div>
                   <div>
-                    <p className="font-heading text-sm font-semibold text-neutral-900">{c.name}</p>
-                    <p className="text-sm text-neutral-500">from Rs {c.base_price}</p>
+                    <p className="font-heading text-sm font-semibold text-foreground">{c.name}</p>
+                    <p className="text-sm text-muted-foreground">from Rs {c.base_price}</p>
                   </div>
                 </CardContent>
               </Card>

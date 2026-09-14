@@ -20,7 +20,7 @@ export default async function AppointmentDetailPage({
   return (
     <div className="mx-auto max-w-xl">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-neutral-900">Appointment #{appointment.id}</h1>
+        <h1 className="text-xl font-bold text-foreground">Appointment #{appointment.id}</h1>
         <Badge variant={appointment.status === "fixed" ? "success" : "warning"}>
           {appointment.status === "fixed" ? "Appointment Fixed" : "Appointment Requested"}
         </Badge>
@@ -53,8 +53,8 @@ export default async function AppointmentDetailPage({
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">{label}</p>
-      <p className="mt-0.5 text-sm font-medium text-neutral-900">{value}</p>
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="mt-0.5 text-sm font-medium text-foreground">{value}</p>
     </div>
   );
 }

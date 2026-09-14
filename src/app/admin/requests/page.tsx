@@ -1,40 +1,33 @@
-import Link from "next/link";
-import { format } from "date-fns";
 import { createClient } from "@/lib/supabase/server";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { BookingsTable, type BookingRow } from "@/components/admin/bookings-table";
 
-export default async function AdminRequestsPage() {
+export default async function AdminBookingsPage() {
   const supabase = await createClient();
   const { data: requests } = await supabase
     .from("service_requests")
-    .select("*")
+    .select(
+      "id, status, is_emergency, address, estimated_price, final_price, created_at, customer:customers(profile:profiles(full_name)), mechanic:mechanics(business_name, profile:profiles(full_name)), category:service_categories(name)"
+    )
     .order("created_at", { ascending: false })
-    .limit(100);
+    .limit(200);
+
+  const bookings: BookingRow[] = (requests ?? []).map((r: any) => ({
+    id: r.id,
+    status: r.status,
+    is_emergency: r.is_emergency,
+    address: r.address,
+    estimated_price: r.estimated_price,
+    final_price: r.final_price,
+    created_at: r.created_at,
+    customer_name: r.customer?.profile?.full_name ?? "Unknown",
+    mechanic_name: r.mechanic?.business_name || r.mechanic?.profile?.full_name || null,
+    category_name: r.category?.name ?? null,
+  }));
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Service Requests</h1>
-      <Card>
-        <CardContent className="divide-y divide-neutral-100 p-0">
-          {(requests ?? []).map((r) => (
-            <Link key={r.id} href={`/track/${r.id}`} className="flex items-center justify-between p-4 hover:bg-neutral-50">
-              <div>
-                <p className="text-sm font-medium text-neutral-900">
-                  Request #{r.id} {r.is_emergency && <Badge variant="danger">Emergency</Badge>}
-                </p>
-                <p className="text-xs text-neutral-400">{format(new Date(r.created_at), "d MMM yyyy, h:mm a")}</p>
-              </div>
-              <Badge variant={r.status === "PAID" ? "success" : r.status === "CANCELLED" ? "danger" : "info"}>
-                {r.status.replace(/_/g, " ").toLowerCase()}
-              </Badge>
-            </Link>
-          ))}
-          {(!requests || requests.length === 0) && (
-            <p className="p-5 text-center text-sm text-neutral-400">No service requests yet.</p>
-          )}
-        </CardContent>
-      </Card>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Bookings</h1>
+      <BookingsTable bookings={bookings} />
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default async function CustomerVehiclesPage() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Vehicles</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Vehicles</h1>
       <VehiclesManager customerId={user!.id} vehicles={vehicles ?? []} />
     </div>
   );

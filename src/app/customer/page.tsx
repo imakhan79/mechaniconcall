@@ -50,7 +50,7 @@ export default async function CustomerOverviewPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="font-heading text-xl font-bold text-neutral-900">Welcome, {profile?.full_name || "there"}</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Welcome, {profile?.full_name || "there"}</h1>
 
       {activeRequests && activeRequests.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -58,11 +58,11 @@ export default async function CustomerOverviewPage() {
             <Link
               key={r.id}
               href={`/track/${r.id}`}
-              className="flex items-center justify-between rounded-xl border border-sky-200 bg-sky-50 p-4 transition-colors hover:bg-sky-100"
+              className="flex items-center justify-between rounded-xl border border-border bg-brand-500/10 p-4 transition-colors hover:bg-brand-500/20"
             >
               <div>
-                <p className="text-sm font-semibold text-sky-900">Active request #{r.id}</p>
-                <p className="text-xs text-sky-700">{r.status.replace(/_/g, " ").toLowerCase()}</p>
+                <p className="text-sm font-semibold text-foreground">Active request #{r.id}</p>
+                <p className="text-xs text-brand-500">{r.status.replace(/_/g, " ").toLowerCase()}</p>
               </div>
               <Badge variant="info">Track</Badge>
             </Link>
@@ -78,18 +78,18 @@ export default async function CustomerOverviewPage() {
 
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-neutral-900">Recent Activity</h2>
-          <Link href="/customer/history" className="text-xs font-medium text-sky-700 hover:underline">
+          <h2 className="text-sm font-semibold text-foreground">Recent Activity</h2>
+          <Link href="/customer/history" className="text-xs font-medium text-brand-500 hover:underline">
             View all
           </Link>
         </div>
         <Card>
-          <CardContent className="divide-y divide-neutral-100 p-0">
+          <CardContent className="divide-y divide-surface-2 p-0">
             {(recentRequests ?? []).map((r) => (
-              <Link key={r.id} href={`/track/${r.id}`} className="flex items-center justify-between p-4 hover:bg-neutral-50">
+              <Link key={r.id} href={`/track/${r.id}`} className="flex items-center justify-between p-4 hover:bg-surface-2">
                 <div>
-                  <p className="text-sm font-medium text-neutral-900">Request #{r.id}</p>
-                  <p className="flex items-center gap-1 text-xs text-neutral-400">
+                  <p className="text-sm font-medium text-foreground">Request #{r.id}</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" aria-hidden="true" /> {format(new Date(r.created_at), "d MMM yyyy")}
                   </p>
                 </div>
@@ -99,7 +99,7 @@ export default async function CustomerOverviewPage() {
               </Link>
             ))}
             {(!recentRequests || recentRequests.length === 0) && (
-              <p className="p-5 text-center text-sm text-neutral-400">
+              <p className="p-5 text-center text-sm text-muted-foreground">
                 No requests yet.{" "}
                 <Link href="/request" className={cn(buttonVariants({ variant: "link", size: "sm" }))}>
                   Request a mechanic
@@ -117,9 +117,9 @@ function StatTile({ icon: Icon, label, value }: { icon: typeof Wrench; label: st
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-1 p-4 text-center">
-        <Icon className="h-5 w-5 text-sky-700" aria-hidden="true" />
-        <span className="text-lg font-bold text-neutral-900">{value}</span>
-        <span className="text-xs text-neutral-500">{label}</span>
+        <Icon className="h-5 w-5 text-brand-500" aria-hidden="true" />
+        <span className="text-lg font-bold text-foreground">{value}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
       </CardContent>
     </Card>
   );

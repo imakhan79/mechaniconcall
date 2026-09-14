@@ -19,8 +19,8 @@ export default async function MechanicsDirectoryPage() {
       <SiteHeader />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-12">
         <FadeIn className="mb-8 text-center">
-          <h1 className="font-heading text-2xl font-bold text-neutral-900 sm:text-3xl">Our Mechanics</h1>
-          <p className="mt-2 text-sm text-neutral-500">Verified, trusted mechanics ready to help.</p>
+          <h1 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">Our Mechanics</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Verified, trusted mechanics ready to help.</p>
         </FadeIn>
 
         <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -31,14 +31,14 @@ export default async function MechanicsDirectoryPage() {
                 <Card>
                   <CardContent className="flex flex-col gap-2 p-5">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-50 text-sky-700">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
                         <Wrench className="h-5 w-5" aria-hidden="true" />
                       </div>
                       <div>
-                        <p className="font-heading text-sm font-semibold text-neutral-900">
+                        <p className="font-heading text-sm font-semibold text-foreground">
                           {m.business_name || profile?.full_name}
                         </p>
-                        <p className="flex items-center gap-1 text-xs text-neutral-500">
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Star className="h-3 w-3 fill-amber-400 text-amber-400" aria-hidden="true" />
                           {Number(m.rating_avg).toFixed(1)} ({m.rating_count})
                         </p>
@@ -62,7 +62,7 @@ export default async function MechanicsDirectoryPage() {
             );
           })}
           {(!mechanics || mechanics.length === 0) && (
-            <p className="col-span-full text-center text-sm text-neutral-400">No verified mechanics yet — check back soon.</p>
+            <p className="col-span-full text-center text-sm text-muted-foreground">No verified mechanics yet — check back soon.</p>
           )}
         </Stagger>
       </main>

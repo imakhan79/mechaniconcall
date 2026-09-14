@@ -69,16 +69,16 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
           <CardTitle>Time Slots</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <ul className="divide-y divide-neutral-100">
+          <ul className="divide-y divide-surface-2">
             {timeSlots.map((slot) => (
               <li key={slot.id} className="flex items-center justify-between py-2 text-sm">
-                <span className={slot.is_active ? "text-neutral-900" : "text-neutral-400 line-through"}>
+                <span className={slot.is_active ? "text-foreground" : "text-muted-foreground line-through"}>
                   {slot.label}
                 </span>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    className="text-xs font-medium text-sky-700 hover:underline disabled:opacity-50"
+                    className="text-xs font-medium text-brand-500 hover:underline disabled:opacity-50"
                     disabled={pending}
                     onClick={() => {
                       const fd = new FormData();
@@ -92,7 +92,7 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
                   <button
                     type="button"
                     aria-label={`Delete ${slot.label}`}
-                    className="text-neutral-400 hover:text-red-600 disabled:opacity-50"
+                    className="text-muted-foreground hover:text-red-600 disabled:opacity-50"
                     disabled={pending}
                     onClick={() => {
                       const fd = new FormData();
@@ -105,7 +105,7 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
                 </div>
               </li>
             ))}
-            {timeSlots.length === 0 && <li className="py-2 text-sm text-neutral-400">No time slots yet.</li>}
+            {timeSlots.length === 0 && <li className="py-2 text-sm text-muted-foreground">No time slots yet.</li>}
           </ul>
 
           <form className="flex flex-wrap gap-2 pt-2" onSubmit={handleAddTimeSlot}>
@@ -129,14 +129,14 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
           <CardTitle>Unavailable Dates</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <ul className="divide-y divide-neutral-100">
+          <ul className="divide-y divide-surface-2">
             {blockedDates.map((b) => (
               <li key={b.date} className="flex items-center justify-between py-2 text-sm">
-                <span className="text-neutral-900">{b.date}</span>
+                <span className="text-foreground">{b.date}</span>
                 <button
                   type="button"
                   aria-label={`Unblock ${b.date}`}
-                  className="text-neutral-400 hover:text-red-600 disabled:opacity-50"
+                  className="text-muted-foreground hover:text-red-600 disabled:opacity-50"
                   disabled={pending}
                   onClick={() => {
                     const fd = new FormData();
@@ -148,7 +148,7 @@ export function SettingsManager({ timeSlots, blockedDates }: { timeSlots: TimeSl
                 </button>
               </li>
             ))}
-            {blockedDates.length === 0 && <li className="py-2 text-sm text-neutral-400">No blocked dates.</li>}
+            {blockedDates.length === 0 && <li className="py-2 text-sm text-muted-foreground">No blocked dates.</li>}
           </ul>
 
           <form className="flex gap-2 pt-2" onSubmit={handleAddBlockedDate}>

@@ -19,7 +19,7 @@ export function SignOutButton() {
         router.push("/login");
         router.refresh();
       }}
-      className="flex items-center gap-1.5 text-neutral-600 hover:text-neutral-900 disabled:opacity-50"
+      className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground disabled:opacity-50"
     >
       <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out
     </button>

@@ -25,21 +25,21 @@ export function DashboardShell({
   const pathname = usePathname();
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="border-b border-border bg-surface">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2 font-bold text-neutral-900">
-            <Wrench className="h-5 w-5 text-sky-700" aria-hidden="true" /> Mechanic On Call
+          <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
+            <Wrench className="h-5 w-5 text-brand-500" aria-hidden="true" /> Mechanic On Call
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <span className="hidden text-neutral-500 sm:inline">
-              {fullName} <span className="text-neutral-300">·</span>{" "}
-              <span className="capitalize text-neutral-400">{role}</span>
+            <span className="hidden text-muted-foreground sm:inline">
+              {fullName} <span className="text-border">·</span>{" "}
+              <span className="capitalize text-muted-foreground/70">{role}</span>
             </span>
             {cta && (
               <Link
                 href={cta.href}
-                className="rounded-lg bg-sky-700 px-3 py-1.5 font-medium text-white transition-colors hover:bg-sky-800"
+                className="rounded-lg bg-brand-500 px-3 py-1.5 font-medium text-background transition-colors hover:bg-brand-600"
               >
                 {cta.label}
               </Link>
@@ -56,7 +56,7 @@ export function DashboardShell({
                 href={href}
                 className={cn(
                   "relative flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium transition-colors",
-                  active ? "text-sky-700" : "text-neutral-500 hover:text-neutral-900"
+                  active ? "text-brand-400" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {icon}
@@ -64,7 +64,7 @@ export function DashboardShell({
                 {active && (
                   <motion.span
                     layoutId={`${role}-nav-active`}
-                    className="absolute inset-0 -z-10 rounded-lg bg-sky-50"
+                    className="absolute inset-0 -z-10 rounded-lg bg-brand-500/10"
                     transition={{ duration: 0.2 }}
                   />
                 )}

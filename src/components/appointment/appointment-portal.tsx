@@ -91,17 +91,17 @@ export function AppointmentPortal({
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
             >
-              <CheckCircle2 className="h-12 w-12 text-emerald-600" aria-hidden="true" />
+              <CheckCircle2 className="h-12 w-12 text-success" aria-hidden="true" />
             </motion.div>
-            <h2 className="text-xl font-bold text-neutral-900">Appointment Requested</h2>
-            <p className="text-sm text-neutral-500">
+            <h2 className="text-xl font-bold text-foreground">Appointment Requested</h2>
+            <p className="text-sm text-muted-foreground">
               We&apos;ve received your request. The workshop will call you to confirm.
             </p>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.3 }}
-              className="mt-2 w-full rounded-lg bg-sky-50 p-4 text-left text-sm"
+              className="mt-2 w-full rounded-lg bg-brand-500/10 p-4 text-left text-sm"
             >
               <Row label="Reference" value={`#${confirmed.id}`} />
               <Row label="Requested date" value={format(confirmed.date, "EEEE, d MMMM yyyy")} />
@@ -134,16 +134,16 @@ export function AppointmentPortal({
               layout
               className={cn(
                 "flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold",
-                i === step ? "bg-sky-700 text-white" : i < step ? "bg-sky-100 text-sky-800" : "bg-neutral-100 text-neutral-400"
+                i === step ? "bg-brand-500 text-white" : i < step ? "bg-border text-brand-600" : "bg-surface-2 text-muted-foreground"
               )}
               transition={{ duration: 0.25, ease: EASE }}
             >
               {i + 1}
             </motion.span>
-            <span className={cn("text-xs font-medium", i === step ? "text-neutral-900" : "text-neutral-400")}>
+            <span className={cn("text-xs font-medium", i === step ? "text-foreground" : "text-muted-foreground")}>
               {label}
             </span>
-            {i < STEPS.length - 1 && <span className="h-px w-4 bg-neutral-200" aria-hidden="true" />}
+            {i < STEPS.length - 1 && <span className="h-px w-4 bg-border" aria-hidden="true" />}
           </li>
         ))}
       </ol>
@@ -161,8 +161,8 @@ export function AppointmentPortal({
                 exit="exit"
                 transition={{ duration: 0.3, ease: EASE }}
               >
-                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                  <CalendarDays className="h-4 w-4 text-sky-700" aria-hidden="true" /> Select appointment date
+                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <CalendarDays className="h-4 w-4 text-brand-500" aria-hidden="true" /> Select appointment date
                 </h2>
                 <AppointmentCalendar selectedDate={date} blockedDates={blockedSet} onSelect={setDate} />
                 <Button className="mt-5 w-full" size="lg" variant="primary" disabled={!date} onClick={() => goTo(1)}>
@@ -181,10 +181,10 @@ export function AppointmentPortal({
                 exit="exit"
                 transition={{ duration: 0.3, ease: EASE }}
               >
-                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-neutral-900">
-                  <Clock className="h-4 w-4 text-sky-700" aria-hidden="true" /> Select appointment time
+                <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <Clock className="h-4 w-4 text-brand-500" aria-hidden="true" /> Select appointment time
                 </h2>
-                <p className="mb-3 text-sm text-neutral-500">{date && format(date, "EEEE, d MMMM yyyy")}</p>
+                <p className="mb-3 text-sm text-muted-foreground">{date && format(date, "EEEE, d MMMM yyyy")}</p>
                 <motion.div
                   className="grid grid-cols-2 gap-2 sm:grid-cols-3"
                   initial="hidden"
@@ -205,15 +205,15 @@ export function AppointmentPortal({
                       className={cn(
                         "min-h-12 cursor-pointer rounded-lg border px-3 py-3 text-sm font-medium transition-colors",
                         slot?.id === s.id
-                          ? "border-sky-700 bg-sky-700 text-white"
-                          : "border-neutral-200 text-neutral-700 hover:border-sky-300 hover:bg-sky-50"
+                          ? "border-brand-500 bg-brand-500 text-white"
+                          : "border-border text-foreground/90 hover:border-brand-400 hover:bg-brand-500/10"
                       )}
                     >
                       {s.label}
                     </motion.button>
                   ))}
                   {timeSlots.length === 0 && (
-                    <p className="col-span-full text-sm text-neutral-400">No time slots are available right now.</p>
+                    <p className="col-span-full text-sm text-muted-foreground">No time slots are available right now.</p>
                   )}
                 </motion.div>
                 <div className="mt-5 flex gap-3">
@@ -238,10 +238,10 @@ export function AppointmentPortal({
                 transition={{ duration: 0.3, ease: EASE }}
               >
                 <form onSubmit={handleSubmit(onSubmitDetails)} className="flex flex-col gap-4">
-                  <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900">
-                    <Wrench className="h-4 w-4 text-sky-700" aria-hidden="true" /> Vehicle & contact details
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
+                    <Wrench className="h-4 w-4 text-brand-500" aria-hidden="true" /> Vehicle & contact details
                   </h2>
-                  <div className="rounded-lg bg-sky-50 p-3 text-sm text-neutral-600">
+                  <div className="rounded-lg bg-brand-500/10 p-3 text-sm text-muted-foreground">
                     {date && format(date, "EEEE, d MMMM yyyy")} · {slot?.label}
                   </div>
 
@@ -293,7 +293,7 @@ const stepVariants = {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-neutral-700">{label}</label>
+      <label className="mb-1 block text-sm font-medium text-foreground/90">{label}</label>
       {children}
       {error && (
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-1 text-xs text-red-600" role="alert">
@@ -307,8 +307,8 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between py-1">
-      <span className="text-neutral-500">{label}</span>
-      <span className="font-medium text-neutral-900">{value}</span>
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-foreground">{value}</span>
     </div>
   );
 }

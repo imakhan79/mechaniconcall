@@ -44,7 +44,7 @@ export default async function MechanicOverviewPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Mechanic Dashboard</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Mechanic Dashboard</h1>
       <MechanicOverview
         mechanicId={mechanicId}
         mechanic={mechanic as Mechanic}

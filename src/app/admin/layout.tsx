@@ -3,9 +3,15 @@ import Link from "next/link";
 import {
   BarChart3,
   Car,
+  CreditCard,
   LayoutDashboard,
+  LifeBuoy,
+  MapPinned,
+  Radio,
   ShieldCheck,
   Settings,
+  Star,
+  Tag,
   Users,
   Wrench,
 } from "lucide-react";
@@ -13,13 +19,19 @@ import { createClient } from "@/lib/supabase/server";
 import { SignOutButton } from "@/components/admin/sign-out-button";
 
 const navItems = [
-  { href: "/admin", label: "Appointments", icon: LayoutDashboard },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
-  { href: "/admin/requests", label: "Requests", icon: Car },
-  { href: "/admin/mechanics", label: "Mechanics", icon: Wrench },
+  { href: "/admin/requests", label: "Bookings", icon: Car },
+  { href: "/admin/live", label: "Live Operations", icon: Radio },
   { href: "/admin/customers", label: "Customers", icon: Users },
+  { href: "/admin/mechanics", label: "Mechanics", icon: Wrench },
   { href: "/admin/verification", label: "Verification", icon: ShieldCheck },
+  { href: "/admin/pricing", label: "Services & Pricing", icon: Tag },
+  { href: "/admin/payments", label: "Payments", icon: CreditCard },
+  { href: "/admin/reviews", label: "Reviews", icon: Star },
+  { href: "/admin/support", label: "Support", icon: LifeBuoy },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/admin/locations", label: "Locations", icon: MapPinned },
+  { href: "/admin", label: "Legacy Appointments", icon: LayoutDashboard },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -33,11 +45,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!adminRow) redirect("/login");
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50" suppressHydrationWarning>
-      <header className="border-b border-neutral-200 bg-white">
+    <div className="flex min-h-screen flex-col bg-background" suppressHydrationWarning>
+      <header className="border-b border-border bg-surface">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link href="/admin" className="flex items-center gap-2 font-bold text-neutral-900">
-            <Wrench className="h-5 w-5 text-sky-700" aria-hidden="true" /> Workshop Admin
+          <Link href="/admin" className="flex items-center gap-2 font-bold text-foreground">
+            <Wrench className="h-5 w-5 text-brand-500" aria-hidden="true" /> Mechanic On Call Admin
           </Link>
           <SignOutButton />
         </div>
@@ -46,7 +58,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link
               key={href}
               href={href}
-              className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium text-neutral-500 transition-colors hover:bg-sky-50 hover:text-neutral-900"
+              className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium text-muted-foreground transition-colors hover:bg-brand-500/10 hover:text-foreground"
             >
               <Icon className="h-4 w-4" aria-hidden="true" /> {label}
             </Link>

@@ -31,9 +31,9 @@ export function AppointmentFilters() {
   }
 
   return (
-    <form onSubmit={apply} className="flex flex-wrap items-center gap-2 rounded-xl border border-neutral-200 bg-white p-3">
+    <form onSubmit={apply} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-surface p-3">
       <div className="relative min-w-[200px] flex-1">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
         <Input
           className="pl-9"
           placeholder="Search ID, car no., name, or mobile"
@@ -44,7 +44,7 @@ export function AppointmentFilters() {
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="h-10 rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-700"
+        className="h-10 rounded-lg border border-border bg-surface px-3 text-sm text-foreground/90"
       >
         <option value="">All statuses</option>
         <option value="requested">Appointment Requested</option>
@@ -54,7 +54,7 @@ export function AppointmentFilters() {
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="h-10 rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-700"
+        className="h-10 rounded-lg border border-border bg-surface px-3 text-sm text-foreground/90"
         aria-label="Filter by appointment date"
       />
       <Button type="submit" variant="outline">

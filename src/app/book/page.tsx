@@ -20,12 +20,12 @@ export default async function BookPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background" suppressHydrationWarning>
-      <SiteHeader showBookCta={false} />
+      <SiteHeader />
 
       <main className="flex flex-1 flex-col items-center px-4 py-8 sm:py-12">
         <FadeIn className="mb-8 text-center">
-          <h1 className="font-heading text-2xl font-bold text-neutral-900 sm:text-3xl">Book a Service Appointment</h1>
-          <p className="mt-2 text-sm text-neutral-500">
+          <h1 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">Book a Service Appointment</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             Pick a date and time, tell us about your vehicle, and the workshop will confirm with you.
           </p>
         </FadeIn>

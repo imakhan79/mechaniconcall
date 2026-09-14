@@ -38,11 +38,11 @@ export function ProfileForm({ userId, fullName, phone }: { userId: string; fullN
       <CardContent className="p-5">
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">Full Name</label>
+            <label className="mb-1 block text-sm font-medium text-foreground/90">Full Name</label>
             <Input required value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">Phone</label>
+            <label className="mb-1 block text-sm font-medium text-foreground/90">Phone</label>
             <Input required value={phoneValue} onChange={(e) => setPhoneValue(e.target.value)} />
           </div>
           <Button type="submit" variant="primary" disabled={loading} className="mt-2 self-start">

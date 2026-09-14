@@ -12,29 +12,29 @@ export default async function AdminCustomersPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Customers</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Customers</h1>
       <Card className="overflow-x-auto">
         <CardContent className="p-0">
           <table className="w-full min-w-[480px] text-sm">
-            <thead className="bg-sky-50/60 text-left text-xs font-semibold uppercase text-neutral-500">
+            <thead className="bg-surface-2 text-left text-xs font-semibold uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Phone</th>
                 <th className="px-4 py-3">Joined</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-surface-2">
               {(profiles ?? []).map((p) => (
                 <tr key={p.id}>
-                  <td className="px-4 py-3 font-medium text-neutral-900">{p.full_name || "—"}</td>
-                  <td className="px-4 py-3 text-neutral-600">{p.phone || "—"}</td>
-                  <td className="px-4 py-3 text-neutral-600">{format(new Date(p.created_at), "d MMM yyyy")}</td>
+                  <td className="px-4 py-3 font-medium text-foreground">{p.full_name || "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{p.phone || "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{format(new Date(p.created_at), "d MMM yyyy")}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           {(!profiles || profiles.length === 0) && (
-            <p className="p-5 text-center text-sm text-neutral-400">No customers registered yet.</p>
+            <p className="p-5 text-center text-sm text-muted-foreground">No customers registered yet.</p>
           )}
         </CardContent>
       </Card>

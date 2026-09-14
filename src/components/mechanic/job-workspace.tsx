@@ -258,31 +258,31 @@ export function JobWorkspace({
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
-            <h1 className="font-heading text-lg font-bold text-neutral-900">Job #{request.id}</h1>
+            <h1 className="font-heading text-lg font-bold text-foreground">Job #{request.id}</h1>
             <Badge variant={request.status === "CANCELLED" ? "danger" : request.status === "PAID" ? "success" : "info"}>
               {STATUS_LABELS[request.status] ?? request.status}
             </Badge>
           </div>
-          <div className="mt-2 flex flex-col gap-1 text-sm text-neutral-600">
+          <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
             <p className="flex items-center gap-1">
-              <Wrench className="h-3.5 w-3.5 text-neutral-400" aria-hidden="true" /> {category?.name ?? "Service"}
+              <Wrench className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" /> {category?.name ?? "Service"}
               {vehicle && ` · ${vehicle.make} ${vehicle.model}`}
             </p>
             <p className="flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5 text-neutral-400" aria-hidden="true" /> {request.address}
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" /> {request.address}
             </p>
             {customerProfile && (
               <p className="flex items-center gap-1">
-                <Phone className="h-3.5 w-3.5 text-neutral-400" aria-hidden="true" /> {customerProfile.full_name}
+                <Phone className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" /> {customerProfile.full_name}
                 {customerProfile.phone && ` · ${customerProfile.phone}`}
               </p>
             )}
-            {request.description && <p className="mt-1 text-neutral-500">&quot;{request.description}&quot;</p>}
+            {request.description && <p className="mt-1 text-muted-foreground">&quot;{request.description}&quot;</p>}
           </div>
         </CardContent>
       </Card>
 
-      <div className="h-56 overflow-hidden rounded-xl border border-neutral-200">
+      <div className="h-56 overflow-hidden rounded-xl border border-border">
         <LiveMap center={{ lat: request.lat, lng: request.lng }} zoom={13} markers={[requestMarker, ...myMarker]} />
       </div>
 
@@ -308,13 +308,13 @@ export function JobWorkspace({
         <Card>
           <CardContent className="flex flex-col gap-4 p-4">
             <div>
-              <h2 className="mb-2 text-sm font-semibold text-neutral-900">Inspection Checklist</h2>
+              <h2 className="mb-2 text-sm font-semibold text-foreground">Inspection Checklist</h2>
               <ul className="mb-2 flex flex-col gap-1">
                 {checklist.map((c, i) => (
-                  <li key={i} className="flex items-center justify-between rounded-lg bg-neutral-50 px-3 py-1.5 text-sm">
+                  <li key={i} className="flex items-center justify-between rounded-lg bg-surface-2 px-3 py-1.5 text-sm">
                     {c.item}
                     <button type="button" onClick={() => setChecklist((prev) => prev.filter((_, idx) => idx !== i))}>
-                      <Trash2 className="h-3.5 w-3.5 text-neutral-400 hover:text-red-600" />
+                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-red-600" />
                     </button>
                   </li>
                 ))}
@@ -330,12 +330,12 @@ export function JobWorkspace({
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
                 placeholder="Inspection notes"
-                className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-700"
+                className="mt-2 w-full rounded-lg border border-border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               />
             </div>
 
             <div>
-              <h2 className="mb-2 text-sm font-semibold text-neutral-900">Repair Estimate</h2>
+              <h2 className="mb-2 text-sm font-semibold text-foreground">Repair Estimate</h2>
               <div className="flex flex-col gap-2">
                 {lines.map((l, i) => (
                   <div key={i} className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-1.5">
@@ -354,7 +354,7 @@ export function JobWorkspace({
                       className="h-9 w-20"
                     />
                     <button type="button" onClick={() => removeLine(i)} aria-label="Remove line">
-                      <Trash2 className="h-4 w-4 text-neutral-400 hover:text-red-600" />
+                      <Trash2 className="h-4 w-4 text-muted-foreground hover:text-red-600" />
                     </button>
                   </div>
                 ))}
@@ -362,7 +362,7 @@ export function JobWorkspace({
               <Button type="button" variant="outline" size="sm" className="mt-2" onClick={addLine}>
                 <Plus className="h-4 w-4" /> Add Line
               </Button>
-              <p className="mt-2 text-right text-sm font-semibold text-neutral-900">Total: Rs {grandTotal.toFixed(0)}</p>
+              <p className="mt-2 text-right text-sm font-semibold text-foreground">Total: Rs {grandTotal.toFixed(0)}</p>
             </div>
 
             <Button variant="primary" disabled={busy} onClick={submitEstimate}>
@@ -374,7 +374,7 @@ export function JobWorkspace({
 
       {request.status === "WAITING_FOR_APPROVAL" && (
         <Card>
-          <CardContent className="p-4 text-sm text-neutral-500">Waiting for the customer to approve your estimate.</CardContent>
+          <CardContent className="p-4 text-sm text-muted-foreground">Waiting for the customer to approve your estimate.</CardContent>
         </Card>
       )}
 
@@ -386,7 +386,7 @@ export function JobWorkspace({
 
       {(request.status === "PAYMENT_PENDING" || request.status === "PAID") && (
         <Card>
-          <CardContent className="p-4 text-sm text-neutral-500">
+          <CardContent className="p-4 text-sm text-muted-foreground">
             {request.status === "PAID" ? "Job completed and paid." : "Waiting for the customer to complete payment."}
           </CardContent>
         </Card>

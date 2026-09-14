@@ -8,11 +8,11 @@ export default async function AdminMechanicsPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Mechanics</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Mechanics</h1>
       <Card className="overflow-x-auto">
         <CardContent className="p-0">
           <table className="w-full min-w-[640px] text-sm">
-            <thead className="bg-sky-50/60 text-left text-xs font-semibold uppercase text-neutral-500">
+            <thead className="bg-surface-2 text-left text-xs font-semibold uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Business</th>
@@ -21,13 +21,13 @@ export default async function AdminMechanicsPage() {
                 <th className="px-4 py-3">Rating</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-surface-2">
               {(mechanics ?? []).map((m) => {
                 const profile = m.profile as unknown as { full_name: string } | null;
                 return (
                   <tr key={m.id}>
-                    <td className="px-4 py-3 font-medium text-neutral-900">{profile?.full_name ?? "—"}</td>
-                    <td className="px-4 py-3 text-neutral-600">{m.business_name ?? "—"}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{profile?.full_name ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{m.business_name ?? "—"}</td>
                     <td className="px-4 py-3">
                       <Badge variant={m.is_online ? "success" : "default"}>{m.is_online ? "Online" : "Offline"}</Badge>
                     </td>
@@ -36,7 +36,7 @@ export default async function AdminMechanicsPage() {
                         {m.verification_status.replace(/_/g, " ")}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-neutral-600">
+                    <td className="px-4 py-3 text-muted-foreground">
                       ⭐ {Number(m.rating_avg).toFixed(1)} ({m.rating_count})
                     </td>
                   </tr>
@@ -45,7 +45,7 @@ export default async function AdminMechanicsPage() {
             </tbody>
           </table>
           {(!mechanics || mechanics.length === 0) && (
-            <p className="p-5 text-center text-sm text-neutral-400">No mechanics registered yet.</p>
+            <p className="p-5 text-center text-sm text-muted-foreground">No mechanics registered yet.</p>
           )}
         </CardContent>
       </Card>

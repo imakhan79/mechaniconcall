@@ -37,7 +37,7 @@ export function VerificationQueue({ mechanics }: { mechanics: PendingMechanic[] 
   if (mechanics.length === 0) {
     return (
       <Card>
-        <CardContent className="p-5 text-center text-sm text-neutral-400">No mechanics awaiting verification.</CardContent>
+        <CardContent className="p-5 text-center text-sm text-muted-foreground">No mechanics awaiting verification.</CardContent>
       </Card>
     );
   }
@@ -49,8 +49,8 @@ export function VerificationQueue({ mechanics }: { mechanics: PendingMechanic[] 
           <CardContent className="p-5">
             <div className="mb-2 flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-neutral-900">{m.profile?.full_name ?? "Mechanic"}</p>
-                <p className="text-xs text-neutral-500">{m.business_name ?? "No business name set"}</p>
+                <p className="text-sm font-semibold text-foreground">{m.profile?.full_name ?? "Mechanic"}</p>
+                <p className="text-xs text-muted-foreground">{m.business_name ?? "No business name set"}</p>
               </div>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" disabled={busyId === m.id} onClick={() => handleDecision(m.id, false)}>
@@ -64,17 +64,17 @@ export function VerificationQueue({ mechanics }: { mechanics: PendingMechanic[] 
             <ul className="flex flex-col gap-1">
               {m.documents.map((d) => (
                 <li key={d.id} className="flex items-center gap-2 text-sm">
-                  <FileText className="h-4 w-4 text-neutral-400" aria-hidden="true" />
+                  <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                   {d.signedUrl ? (
-                    <a href={d.signedUrl} target="_blank" rel="noreferrer" className="text-sky-700 hover:underline">
+                    <a href={d.signedUrl} target="_blank" rel="noreferrer" className="text-brand-500 hover:underline">
                       {d.doc_type}
                     </a>
                   ) : (
-                    <span className="text-neutral-400">{d.doc_type} (unavailable)</span>
+                    <span className="text-muted-foreground">{d.doc_type} (unavailable)</span>
                   )}
                 </li>
               ))}
-              {m.documents.length === 0 && <li className="text-sm text-neutral-400">No documents submitted.</li>}
+              {m.documents.length === 0 && <li className="text-sm text-muted-foreground">No documents submitted.</li>}
             </ul>
           </CardContent>
         </Card>

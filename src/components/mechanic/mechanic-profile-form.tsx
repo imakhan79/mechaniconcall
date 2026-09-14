@@ -77,7 +77,7 @@ export function MechanicProfileForm({
       <Card>
         <CardContent className="p-5">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-neutral-900">Business Profile</h2>
+            <h2 className="text-sm font-semibold text-foreground">Business Profile</h2>
             <Badge
               variant={
                 mechanic.verification_status === "verified"
@@ -92,15 +92,15 @@ export function MechanicProfileForm({
           </div>
           <form onSubmit={handleSave} className="flex flex-col gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">Business Name</label>
+              <label className="mb-1 block text-sm font-medium text-foreground/90">Business Name</label>
               <Input value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder="e.g. Ahmed Auto Repair" />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">Specialties (comma-separated)</label>
+              <label className="mb-1 block text-sm font-medium text-foreground/90">Specialties (comma-separated)</label>
               <Input value={specialties} onChange={(e) => setSpecialties(e.target.value)} placeholder="Engine, Brakes, Electrical" />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-neutral-700">Service Radius (km)</label>
+              <label className="mb-1 block text-sm font-medium text-foreground/90">Service Radius (km)</label>
               <Input type="number" value={radius} onChange={(e) => setRadius(e.target.value)} />
             </div>
             <Button type="submit" variant="primary" disabled={saving} className="self-start">
@@ -112,25 +112,25 @@ export function MechanicProfileForm({
 
       <Card>
         <CardContent className="p-5">
-          <h2 className="mb-3 text-sm font-semibold text-neutral-900">Verification Documents</h2>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">Verification Documents</h2>
           <ul className="mb-3 flex flex-col gap-2">
             {documents.map((d) => (
-              <li key={d.id} className="flex items-center justify-between rounded-lg border border-neutral-200 px-3 py-2 text-sm">
-                <span className="flex items-center gap-2 text-neutral-700">
-                  <FileText className="h-4 w-4 text-neutral-400" aria-hidden="true" /> {d.doc_type}
+              <li key={d.id} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
+                <span className="flex items-center gap-2 text-foreground/90">
+                  <FileText className="h-4 w-4 text-muted-foreground" aria-hidden="true" /> {d.doc_type}
                 </span>
                 <Badge variant={d.status === "approved" ? "success" : d.status === "rejected" ? "danger" : "warning"}>
                   {d.status}
                 </Badge>
               </li>
             ))}
-            {documents.length === 0 && <li className="text-sm text-neutral-400">No documents submitted yet.</li>}
+            {documents.length === 0 && <li className="text-sm text-muted-foreground">No documents submitted yet.</li>}
           </ul>
           <input
             type="file"
             disabled={uploading}
             onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])}
-            className="block w-full text-sm text-neutral-500 file:mr-3 file:rounded-lg file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-sky-700"
+            className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-brand-500/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-500"
           />
         </CardContent>
       </Card>

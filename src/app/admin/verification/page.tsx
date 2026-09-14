@@ -24,7 +24,7 @@ export default async function AdminVerificationPage() {
 
   return (
     <div>
-      <h1 className="mb-4 font-heading text-xl font-bold text-neutral-900">Mechanic Verification</h1>
+      <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Mechanic Verification</h1>
       <VerificationQueue mechanics={withSignedUrls} />
     </div>
   );

@@ -64,9 +64,9 @@ export function ChatPanel({ requestId, userId }: { requestId: number; userId: st
   }
 
   return (
-    <div className="flex h-80 flex-col rounded-xl border border-neutral-200 bg-white">
+    <div className="flex h-80 flex-col rounded-xl border border-border bg-surface">
       <div className="flex-1 overflow-y-auto p-3">
-        {messages.length === 0 && <p className="p-2 text-center text-sm text-neutral-400">No messages yet.</p>}
+        {messages.length === 0 && <p className="p-2 text-center text-sm text-muted-foreground">No messages yet.</p>}
         <div className="flex flex-col gap-2">
           {messages.map((m) => {
             const mine = m.sender_id === userId;
@@ -75,7 +75,7 @@ export function ChatPanel({ requestId, userId }: { requestId: number; userId: st
                 key={m.id}
                 className={cn(
                   "max-w-[80%] rounded-lg px-3 py-2 text-sm",
-                  mine ? "self-end bg-sky-700 text-white" : "self-start bg-neutral-100 text-neutral-900"
+                  mine ? "self-end bg-brand-500 text-white" : "self-start bg-surface-2 text-foreground"
                 )}
               >
                 {m.body}
@@ -85,7 +85,7 @@ export function ChatPanel({ requestId, userId }: { requestId: number; userId: st
         </div>
         <div ref={bottomRef} />
       </div>
-      <form onSubmit={handleSend} className="flex gap-2 border-t border-neutral-100 p-2">
+      <form onSubmit={handleSend} className="flex gap-2 border-t border-surface-2 p-2">
         <Input
           value={body}
           onChange={(e) => setBody(e.target.value)}

@@ -18,7 +18,7 @@ export default async function MechanicProfilePage() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-4">
-      <h1 className="font-heading text-xl font-bold text-neutral-900">Profile</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Profile</h1>
       <ProfileForm userId={mechanicId} fullName={profile?.full_name ?? ""} phone={profile?.phone ?? null} />
       <MechanicProfileForm mechanicId={mechanicId} mechanic={mechanic as Mechanic} documents={documents ?? []} />
     </div>

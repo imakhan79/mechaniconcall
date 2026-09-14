@@ -69,27 +69,27 @@ export default function LoginPage() {
       suppressHydrationWarning
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-sky-600/20 blur-3xl" />
-        <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-emerald-600/15 blur-3xl" />
+        <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-brand-500/20 blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-success/15 blur-3xl" />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.45, ease: EASE }}
-        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-white shadow-2xl shadow-black/40"
+        className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-surface shadow-2xl shadow-black/40"
       >
         <div className="flex flex-col items-center gap-1 p-6 pb-2 text-center">
-          <Link href="/" className="mb-2 flex items-center gap-2 text-sky-700">
+          <Link href="/" className="mb-2 flex items-center gap-2 text-brand-500">
             <ShieldCheck className="h-6 w-6" aria-hidden="true" />
-            <span className="font-heading text-lg font-bold text-neutral-900">Sign In</span>
+            <span className="font-heading text-lg font-bold text-foreground">Sign In</span>
           </Link>
-          <p className="text-sm text-neutral-500">Customers, mechanics, and the workshop all sign in here.</p>
+          <p className="text-sm text-muted-foreground">Customers, mechanics, and the workshop all sign in here.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6 pt-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">Email</label>
+            <label className="mb-1 block text-sm font-medium text-foreground/90">Email</label>
             <Input
               type="email"
               autoComplete="username"
@@ -100,7 +100,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-neutral-700">Password</label>
+            <label className="mb-1 block text-sm font-medium text-foreground/90">Password</label>
             <Input
               type="password"
               autoComplete="current-password"
@@ -120,17 +120,17 @@ export default function LoginPage() {
             )}
           </Button>
 
-          <p className="text-center text-sm text-neutral-500">
+          <p className="text-center text-sm text-muted-foreground">
             New here?{" "}
-            <Link href="/register" className="font-medium text-sky-700 hover:underline">
+            <Link href="/register" className="font-medium text-brand-500 hover:underline">
               Create an account
             </Link>
           </p>
 
-          <div className="my-1 flex items-center gap-3 text-xs text-neutral-400">
-            <span className="h-px flex-1 bg-neutral-200" />
+          <div className="my-1 flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
             or
-            <span className="h-px flex-1 bg-neutral-200" />
+            <span className="h-px flex-1 bg-border" />
           </div>
 
           <Button

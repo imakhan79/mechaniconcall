@@ -7,7 +7,7 @@ export type { MapMarker } from "./map-view";
 
 const MapView = dynamic(() => import("./map-view").then((m) => m.MapView), {
   ssr: false,
-  loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-neutral-100" />,
+  loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-surface-2" />,
 });
 
 export function LiveMap(props: MapViewProps) {

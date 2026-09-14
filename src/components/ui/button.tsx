@@ -4,18 +4,18 @@ import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
-        default: "bg-neutral-900 text-white hover:bg-neutral-800 focus-visible:ring-neutral-900",
-        primary: "bg-sky-700 text-white hover:bg-sky-800 focus-visible:ring-sky-700 shadow-sm",
-        accent: "bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-600 shadow-sm",
-        emergency: "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600 shadow-lg shadow-red-600/30",
-        outline: "border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-900",
-        ghost: "hover:bg-neutral-100 text-neutral-900",
-        secondary: "bg-neutral-100 text-neutral-900 hover:bg-neutral-200",
-        link: "text-sky-700 underline-offset-4 hover:underline",
+        default: "bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-foreground",
+        primary: "bg-brand-500 text-background hover:bg-brand-600 focus-visible:ring-brand-500 shadow-sm shadow-brand-500/20",
+        accent: "bg-success text-white hover:bg-success/90 focus-visible:ring-success shadow-sm",
+        emergency: "bg-danger text-white hover:bg-danger/90 focus-visible:ring-danger shadow-lg shadow-danger/30",
+        outline: "border border-border bg-transparent hover:bg-surface-2 text-foreground",
+        ghost: "hover:bg-surface-2 text-foreground",
+        secondary: "bg-surface-2 text-foreground hover:bg-surface-2/70",
+        link: "text-brand-400 underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-4 py-2",
