@@ -16,23 +16,33 @@ export function ChatPanel({ requestId, userId }: { requestId: number; userId: st
 
   useEffect(() => {
     const supabase = createClient();
-    supabase
-      .from("messages")
-      .select("*")
-      .eq("request_id", requestId)
-      .order("created_at")
-      .then(({ data }) => setMessages(data ?? []));
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let cancelled = false;
 
-    const channel = supabase
-      .channel(`messages-${requestId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `request_id=eq.${requestId}` },
-        (payload) => setMessages((prev) => [...prev, payload.new as Message])
-      )
-      .subscribe();
+    async function setup() {
+      const { data } = await supabase.from("messages").select("*").eq("request_id", requestId).order("created_at");
+      if (!cancelled) setMessages(data ?? []);
+
+      // Ensure the session (and therefore Realtime's auth token) is fully
+      // loaded before subscribing — subscribing too early leaves the socket
+      // unauthenticated, so RLS silently blocks every event on this channel.
+      await supabase.auth.getSession();
+      if (cancelled) return;
+
+      channel = supabase
+        .channel(`messages-${requestId}`)
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "messages", filter: `request_id=eq.${requestId}` },
+          (payload) => setMessages((prev) => [...prev, payload.new as Message])
+        )
+        .subscribe();
+    }
+    setup();
 
     return () => {
+      cancelled = true;
+      if (!channel) return;
       supabase.removeChannel(channel);
     };
   }, [requestId]);

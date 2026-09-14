@@ -58,16 +58,27 @@ export function JobWorkspace({
 
   useEffect(() => {
     const supabase = createClient();
-    const channel = supabase
-      .channel(`job-${initialRequest.id}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "service_requests", filter: `id=eq.${initialRequest.id}` },
-        (payload) => setRequest(payload.new as ServiceRequest)
-      )
-      .subscribe();
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let cancelled = false;
+
+    // Ensure the session (and therefore Realtime's auth token) is fully
+    // loaded before subscribing — subscribing too early leaves the socket
+    // unauthenticated, so RLS silently blocks every event on this channel.
+    supabase.auth.getSession().then(() => {
+      if (cancelled) return;
+      channel = supabase
+        .channel(`job-${initialRequest.id}`)
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "service_requests", filter: `id=eq.${initialRequest.id}` },
+          (payload) => setRequest(payload.new as ServiceRequest)
+        )
+        .subscribe();
+    });
+
     return () => {
-      supabase.removeChannel(channel);
+      cancelled = true;
+      if (channel) supabase.removeChannel(channel);
       if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
     };
   }, [initialRequest.id]);
