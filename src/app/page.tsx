@@ -308,7 +308,7 @@ export default function Home() {
                 Mechanic On Call, <span className="text-brand-500">right in your pocket.</span>
               </h2>
               <p className="mt-3 max-w-md text-sm text-muted-foreground sm:text-base">
-                Request help, track your mechanic's live location, chat, and pay — all from one clean,
+                Request help, track your mechanic&apos;s live location, chat, and pay — all from one clean,
                 fast mobile experience built for roadside emergencies.
               </p>
               <ul className="mt-6 flex flex-col gap-3">

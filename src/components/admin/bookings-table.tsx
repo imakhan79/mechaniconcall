@@ -6,10 +6,9 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatAED } from "@/lib/currency";
-import { adminCancelRequest } from "@/app/admin/actions";
+import { adminAssignMechanic, adminCancelRequest } from "@/app/admin/actions";
 
 export type BookingRow = {
   id: number;
@@ -20,9 +19,12 @@ export type BookingRow = {
   final_price: number | null;
   created_at: string;
   customer_name: string;
+  mechanic_id: string | null;
   mechanic_name: string | null;
   category_name: string | null;
 };
+
+export type MechanicOption = { id: string; name: string };
 
 const FILTERS = ["all", "pending", "assigned", "in_progress", "completed", "cancelled"] as const;
 const PENDING = ["REQUESTED", "SEARCHING"];
@@ -40,7 +42,7 @@ function matchesFilter(status: string, filter: (typeof FILTERS)[number]) {
   return true;
 }
 
-export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
+export function BookingsTable({ bookings, mechanics }: { bookings: BookingRow[]; mechanics: MechanicOption[] }) {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
   const [query, setQuery] = useState("");
   const [pending, startTransition] = useTransition();
@@ -58,6 +60,15 @@ export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
     startTransition(async () => {
       const res = await adminCancelRequest(id);
       if (res.ok) toast.success("Booking cancelled");
+      else toast.error(res.error);
+    });
+  }
+
+  function handleAssign(id: number, mechanicId: string) {
+    if (!mechanicId) return;
+    startTransition(async () => {
+      const res = await adminAssignMechanic(id, mechanicId);
+      if (res.ok) toast.success("Mechanic assigned");
       else toast.error(res.error);
     });
   }
@@ -110,7 +121,27 @@ export function BookingsTable({ bookings }: { bookings: BookingRow[] }) {
                   #{b.id} {b.is_emergency && <Badge variant="danger">Emergency</Badge>}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{b.customer_name}</td>
-                <td className="px-4 py-3 text-muted-foreground">{b.mechanic_name ?? "Unassigned"}</td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {["PAID", "CANCELLED"].includes(b.status) ? (
+                    b.mechanic_name ?? "Unassigned"
+                  ) : (
+                    <select
+                      value={b.mechanic_id ?? ""}
+                      disabled={pending}
+                      onChange={(e) => handleAssign(b.id, e.target.value)}
+                      className="h-8 rounded-lg border border-border bg-surface-2 px-2 text-xs text-foreground"
+                    >
+                      <option value="" disabled>
+                        Unassigned
+                      </option>
+                      {mechanics.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-muted-foreground">{b.category_name ?? "—"}</td>
                 <td className="px-4 py-3 text-foreground">{formatAED(b.final_price ?? b.estimated_price)}</td>
                 <td className="px-4 py-3">

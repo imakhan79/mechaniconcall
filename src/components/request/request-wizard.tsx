@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LiveMap } from "@/components/map/live-map";
 import { cn } from "@/lib/utils";
 import { getCurrentPosition, reverseGeocode, searchAddress, type AddressResult, type GeoPosition } from "@/lib/geo";
+import { formatAED } from "@/lib/currency";
 import type { ServiceCategory, Vehicle } from "@/lib/supabase/types";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -275,7 +276,7 @@ export function RequestWizard({
                       )}
                     >
                       {c.name}
-                      <span className="mt-0.5 block text-xs font-normal text-muted-foreground">from Rs {c.base_price}</span>
+                      <span className="mt-0.5 block text-xs font-normal text-muted-foreground">from {formatAED(c.base_price)}</span>
                     </button>
                   ))}
                 </div>

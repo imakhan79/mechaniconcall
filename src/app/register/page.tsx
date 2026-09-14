@@ -48,7 +48,7 @@ export default function RegisterPage() {
 
   if (needsConfirmation) {
     return (
-      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-brand-500/20 blur-3xl" />
           <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-success/15 blur-3xl" />
@@ -74,7 +74,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-brand-500/20 blur-3xl" />
         <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-success/15 blur-3xl" />

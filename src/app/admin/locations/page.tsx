@@ -3,6 +3,16 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+type MechanicLocationRow = {
+  id: string;
+  business_name: string | null;
+  is_online: boolean;
+  service_radius_km: number;
+  current_lat: number | null;
+  current_lng: number | null;
+  profile: { full_name: string } | null;
+};
+
 export default async function AdminLocationsPage() {
   const supabase = await createClient();
   const { data: mechanics } = await supabase
@@ -29,14 +39,16 @@ export default async function AdminLocationsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {(mechanics ?? []).map((m: any) => (
+              {((mechanics ?? []) as unknown as MechanicLocationRow[]).map((m) => (
                 <tr key={m.id}>
                   <td className="px-4 py-3 font-medium text-foreground">{m.business_name || m.profile?.full_name || "Mechanic"}</td>
                   <td className="px-4 py-3">
                     <Badge variant={m.is_online ? "success" : "default"}>{m.is_online ? "Online" : "Offline"}</Badge>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {m.current_lat != null ? `${m.current_lat.toFixed(3)}, ${m.current_lng.toFixed(3)}` : "Unknown"}
+                    {m.current_lat != null && m.current_lng != null
+                      ? `${m.current_lat.toFixed(3)}, ${m.current_lng.toFixed(3)}`
+                      : "Unknown"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{m.service_radius_km} km</td>
                 </tr>

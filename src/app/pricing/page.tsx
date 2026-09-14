@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { formatAED } from "@/lib/currency";
 
 export default async function PricingPage() {
   const supabase = await createClient();
@@ -30,7 +31,7 @@ export default async function PricingPage() {
                   </div>
                   <div>
                     <p className="font-heading text-sm font-semibold text-foreground">{c.name}</p>
-                    <p className="text-sm text-muted-foreground">from Rs {c.base_price}</p>
+                    <p className="text-sm text-muted-foreground">from {formatAED(c.base_price)}</p>
                   </div>
                 </CardContent>
               </Card>

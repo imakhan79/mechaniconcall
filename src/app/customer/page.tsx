@@ -27,7 +27,14 @@ export default async function CustomerOverviewPage() {
   } = await supabase.auth.getUser();
   const userId = user!.id;
 
-  const [{ data: profile }, { data: activeRequests }, { data: recentRequests }, { data: vehicles }] = await Promise.all([
+  const [
+    { data: profile },
+    { data: activeRequests },
+    { data: recentRequests },
+    { data: vehicles },
+    { count: totalRequests },
+    { count: completedCount },
+  ] = await Promise.all([
     supabase.from("profiles").select("full_name").eq("id", userId).maybeSingle(),
     supabase
       .from("service_requests")
@@ -42,11 +49,13 @@ export default async function CustomerOverviewPage() {
       .order("created_at", { ascending: false })
       .limit(3),
     supabase.from("vehicles").select("id").eq("customer_id", userId),
+    supabase.from("service_requests").select("id", { count: "exact", head: true }).eq("customer_id", userId),
+    supabase
+      .from("service_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("customer_id", userId)
+      .eq("status", "PAID"),
   ]);
-
-  const totalRequests = recentRequests?.length ?? 0;
-  const completedCount =
-    recentRequests?.filter((r) => r.status === "PAID" || r.status === "COMPLETED").length ?? 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -71,8 +80,8 @@ export default async function CustomerOverviewPage() {
       )}
 
       <div className="grid grid-cols-3 gap-3">
-        <StatTile icon={Wrench} label="Total Requests" value={totalRequests} />
-        <StatTile icon={CheckCircle2} label="Completed" value={completedCount} />
+        <StatTile icon={Wrench} label="Total Requests" value={totalRequests ?? 0} />
+        <StatTile icon={CheckCircle2} label="Completed" value={completedCount ?? 0} />
         <StatTile icon={Car} label="Vehicles" value={vehicles?.length ?? 0} />
       </div>
 

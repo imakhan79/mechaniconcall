@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PayoutButton } from "@/components/mechanic/payout-button";
+import { formatAED } from "@/lib/currency";
 
 export default async function MechanicEarningsPage() {
   const supabase = await createClient();
@@ -44,7 +45,7 @@ export default async function MechanicEarningsPage() {
             {(payouts ?? []).map((p) => (
               <div key={p.id} className="flex items-center justify-between p-4">
                 <div>
-                  <p className="text-sm font-medium text-foreground">Rs {Number(p.amount).toFixed(0)}</p>
+                  <p className="text-sm font-medium text-foreground">{formatAED(Number(p.amount))}</p>
                   <p className="text-xs text-muted-foreground">{format(new Date(p.requested_at), "d MMM yyyy")}</p>
                 </div>
                 <Badge variant={p.status === "paid" ? "success" : p.status === "rejected" ? "danger" : "warning"}>
@@ -69,7 +70,7 @@ export default async function MechanicEarningsPage() {
                   <p className="text-sm font-medium text-foreground">Job #{e.request_id}</p>
                   <p className="text-xs text-muted-foreground">{format(new Date(e.created_at), "d MMM yyyy")}</p>
                 </div>
-                <p className="text-sm font-semibold text-foreground">Rs {Number(e.net_amount).toFixed(0)}</p>
+                <p className="text-sm font-semibold text-foreground">{formatAED(Number(e.net_amount))}</p>
               </div>
             ))}
             {(!earnings || earnings.length === 0) && (
@@ -86,7 +87,7 @@ function Stat({ label, value, highlight }: { label: string; value: number; highl
   return (
     <Card>
       <CardContent className="p-4 text-center">
-        <p className={`text-lg font-bold ${highlight ? "text-brand-500" : "text-foreground"}`}>Rs {value.toFixed(0)}</p>
+        <p className={`text-lg font-bold ${highlight ? "text-brand-500" : "text-foreground"}`}>{formatAED(value)}</p>
         <p className="text-xs text-muted-foreground">{label}</p>
       </CardContent>
     </Card>

@@ -9,9 +9,8 @@ import { FadeIn, Stagger, StaggerItem } from "@/components/motion/reveal";
 export default async function MechanicsDirectoryPage() {
   const supabase = await createClient();
   const { data: mechanics } = await supabase
-    .from("mechanics")
-    .select("*, profile:profiles(*)")
-    .eq("verification_status", "verified")
+    .from("mechanics_directory")
+    .select("*")
     .order("rating_avg", { ascending: false });
 
   return (
@@ -25,7 +24,6 @@ export default async function MechanicsDirectoryPage() {
 
         <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {(mechanics ?? []).map((m) => {
-            const profile = m.profile as unknown as { full_name: string } | null;
             return (
               <StaggerItem key={m.id}>
                 <Card>
@@ -36,7 +34,7 @@ export default async function MechanicsDirectoryPage() {
                       </div>
                       <div>
                         <p className="font-heading text-sm font-semibold text-foreground">
-                          {m.business_name || profile?.full_name}
+                          {m.business_name || m.full_name}
                         </p>
                         <p className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Star className="h-3 w-3 fill-amber-400 text-amber-400" aria-hidden="true" />

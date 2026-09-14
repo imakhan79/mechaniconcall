@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,7 +61,8 @@ export function ChatPanel({ requestId, userId }: { requestId: number; userId: st
       .from("messages")
       .insert({ request_id: requestId, sender_id: userId, body: body.trim() });
     setSending(false);
-    if (!error) setBody("");
+    if (error) toast.error("Could not send message.");
+    else setBody("");
   }
 
   return (

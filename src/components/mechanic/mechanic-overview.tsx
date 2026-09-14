@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCurrentPosition, haversineKm } from "@/lib/geo";
+import { formatAED } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 import type { Mechanic, Profile, ServiceRequest } from "@/lib/supabase/types";
 
@@ -58,17 +59,19 @@ export function MechanicOverview({
     if (!isOnline) {
       try {
         const pos = await getCurrentPosition();
-        await supabase
+        const { error } = await supabase
           .from("mechanics")
           .update({ is_online: true, current_lat: pos.lat, current_lng: pos.lng })
           .eq("id", mechanicId);
-        setIsOnline(true);
+        if (error) toast.error("Could not go online.");
+        else setIsOnline(true);
       } catch {
         toast.error("Could not get your location. Enable location access to go online.");
       }
     } else {
-      await supabase.from("mechanics").update({ is_online: false }).eq("id", mechanicId);
-      setIsOnline(false);
+      const { error } = await supabase.from("mechanics").update({ is_online: false }).eq("id", mechanicId);
+      if (error) toast.error("Could not go offline.");
+      else setIsOnline(false);
     }
     setToggling(false);
     router.refresh();
@@ -144,7 +147,7 @@ export function MechanicOverview({
 
       <div className="grid grid-cols-3 gap-3">
         <StatTile icon={Briefcase} label="Today's Jobs" value={todayJobs} />
-        <StatTile icon={DollarSign} label="Week Earnings" value={`Rs ${weekEarnings}`} />
+        <StatTile icon={DollarSign} label="Week Earnings" value={formatAED(weekEarnings)} />
         <StatTile icon={Star} label="Rating" value={mechanic.rating_avg.toFixed(1)} />
       </div>
 

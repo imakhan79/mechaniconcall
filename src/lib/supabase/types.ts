@@ -335,4 +335,5 @@ export interface EmergencyRequest {
 // Minimal Supabase Database generic. Not exhaustive (see individual
 // interfaces above for real shapes) — matching @supabase/supabase-js's exact
 // GenericSchema constraints isn't worth it for a schema this small.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Database = any;

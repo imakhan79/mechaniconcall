@@ -4,6 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LiveMap } from "@/components/map/live-map";
 import type { MapMarker } from "@/components/map/live-map";
 
+type OnlineMechanicRow = {
+  id: string;
+  business_name: string | null;
+  current_lat: number;
+  current_lng: number;
+  profile: { full_name: string } | null;
+};
+
 export default async function AdminLiveOperationsPage() {
   const supabase = await createClient();
 
@@ -19,7 +27,7 @@ export default async function AdminLiveOperationsPage() {
       .not("status", "in", "(PAID,CANCELLED)"),
   ]);
 
-  const mechanicMarkers: MapMarker[] = (mechanics ?? []).map((m: any) => ({
+  const mechanicMarkers: MapMarker[] = ((mechanics ?? []) as unknown as OnlineMechanicRow[]).map((m) => ({
     id: `mechanic-${m.id}`,
     lat: m.current_lat,
     lng: m.current_lng,

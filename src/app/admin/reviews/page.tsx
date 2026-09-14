@@ -4,6 +4,16 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+type RatingRow = {
+  id: string;
+  request_id: number;
+  overall: number;
+  review: string | null;
+  created_at: string;
+  customer: { profile: { full_name: string } | null } | null;
+  mechanic: { business_name: string | null; profile: { full_name: string } | null } | null;
+};
+
 export default async function AdminReviewsPage() {
   const supabase = await createClient();
   const { data: ratings } = await supabase
@@ -19,7 +29,7 @@ export default async function AdminReviewsPage() {
       <h1 className="mb-4 font-heading text-xl font-bold text-foreground">Reviews</h1>
       <Card>
         <CardContent className="divide-y divide-surface-2 p-0">
-          {(ratings ?? []).map((r: any) => (
+          {((ratings ?? []) as unknown as RatingRow[]).map((r) => (
             <div key={r.id} className="p-4">
               <div className="flex items-center justify-between">
                 <div>

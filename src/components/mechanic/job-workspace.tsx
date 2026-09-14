@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LiveMap } from "@/components/map/live-map";
 import { ChatPanel } from "@/components/chat/chat-panel";
+import { formatAED } from "@/lib/currency";
 import type { Profile, ServiceCategory, ServiceRequest, Vehicle } from "@/lib/supabase/types";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -250,8 +251,8 @@ export function JobWorkspace({
     toast.success("Job marked complete");
   }
 
-  const requestMarker = { id: "request", lat: request.lat, lng: request.lng, label: "Customer", color: "#0369a1" };
-  const myMarker = myLocation ? [{ id: "me", lat: myLocation.lat, lng: myLocation.lng, label: "You", color: "#16a34a" }] : [];
+  const requestMarker = { id: "request", lat: request.lat, lng: request.lng, label: "Customer", color: "#3b82f6" };
+  const myMarker = myLocation ? [{ id: "me", lat: myLocation.lat, lng: myLocation.lng, label: "You", color: "#8ed600" }] : [];
 
   return (
     <div className="mx-auto flex max-w-lg flex-col gap-4 px-4 py-6">
@@ -362,7 +363,7 @@ export function JobWorkspace({
               <Button type="button" variant="outline" size="sm" className="mt-2" onClick={addLine}>
                 <Plus className="h-4 w-4" /> Add Line
               </Button>
-              <p className="mt-2 text-right text-sm font-semibold text-foreground">Total: Rs {grandTotal.toFixed(0)}</p>
+              <p className="mt-2 text-right text-sm font-semibold text-foreground">Total: {formatAED(grandTotal)}</p>
             </div>
 
             <Button variant="primary" disabled={busy} onClick={submitEstimate}>

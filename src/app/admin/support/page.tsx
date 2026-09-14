@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { SupportQueue } from "@/components/admin/support-queue";
+import type { SupportTicket } from "@/lib/supabase/types";
+
+type TicketRow = SupportTicket & { user: { full_name: string } | null };
 
 export default async function AdminSupportPage() {
   const supabase = await createClient();
@@ -9,7 +12,7 @@ export default async function AdminSupportPage() {
     .order("created_at", { ascending: false })
     .limit(150);
 
-  const withNames = (tickets ?? []).map((t: any) => ({ ...t, user_name: t.user?.full_name ?? "Unknown" }));
+  const withNames = ((tickets ?? []) as unknown as TicketRow[]).map((t) => ({ ...t, user_name: t.user?.full_name ?? "Unknown" }));
 
   return (
     <div>
