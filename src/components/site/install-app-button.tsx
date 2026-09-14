@@ -11,12 +11,15 @@ export function InstallAppButton({
   variant = "outline",
   size = "sm",
   fullWidth = false,
+  iconOnly = false,
   onInstallStart,
 }: {
   className?: string;
   variant?: ButtonProps["variant"];
   size?: ButtonProps["size"];
   fullWidth?: boolean;
+  /** Renders just the download icon (no label) — for tight header spaces on mobile. */
+  iconOnly?: boolean;
   /** Called right before a native/manual install flow is triggered — handy for closing a mobile menu. */
   onInstallStart?: () => void;
 }) {
@@ -39,13 +42,13 @@ export function InstallAppButton({
       <Button
         type="button"
         variant={variant}
-        size={size}
+        size={iconOnly ? "icon" : size}
         onClick={handleClick}
         aria-label="Install the Mechanic On Call app"
-        className={cn("gap-1.5", fullWidth && "w-full", className)}
+        className={cn(!iconOnly && "gap-1.5", fullWidth && "w-full", className)}
       >
         <Download className="h-4 w-4" aria-hidden="true" />
-        Install App
+        {!iconOnly && "Install App"}
       </Button>
       {modal && <InstallInstructionsModal kind={modal} onClose={() => setModal(null)} />}
     </>
