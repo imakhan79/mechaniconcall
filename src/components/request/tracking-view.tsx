@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, MapPin, Phone, Star, X } from "lucide-react";
+import { Apple, Banknote, Car, CheckCircle2, CreditCard, Landmark, MapPin, Phone, SmartphoneNfc, Star, Wallet, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,6 +40,16 @@ const STATUS_LABELS: Record<string, string> = {
 
 const CANCELLABLE = new Set(["REQUESTED", "SEARCHING", "MECHANIC_ASSIGNED", "MECHANIC_ACCEPTED"]);
 
+const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: typeof Banknote }[] = [
+  { value: "apple_pay", label: "Apple Pay", icon: Apple },
+  { value: "card", label: "Card", icon: CreditCard },
+  { value: "payit", label: "PayIt by FAB", icon: SmartphoneNfc },
+  { value: "careem_pay", label: "Careem Pay", icon: Car },
+  { value: "e_and_money", label: "e& money", icon: Wallet },
+  { value: "cash", label: "Cash", icon: Banknote },
+  { value: "bank", label: "Bank Transfer", icon: Landmark },
+];
+
 type NearbyMechanic = Mechanic & { profile: Profile | null; distanceKm: number };
 
 export function TrackingView({
@@ -55,7 +65,7 @@ export function TrackingView({
   const [nearby, setNearby] = useState<NearbyMechanic[]>([]);
   const [estimate, setEstimate] = useState<(RepairEstimate & { items: EstimateItem[] }) | null>(null);
   const [ratingGiven, setRatingGiven] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("apple_pay");
   const [busy, setBusy] = useState(false);
 
   // realtime subscription to this request's row
@@ -327,17 +337,24 @@ export function TrackingView({
             <p className="mb-3 text-sm text-muted-foreground">
               Amount due: <span className="font-semibold text-foreground">{formatAED(request.final_price ?? request.estimated_price)}</span>
             </p>
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-              className="mb-3 h-11 w-full rounded-lg border border-border bg-surface-2 px-3 text-sm capitalize text-foreground"
-            >
-              {(["cash", "card", "payit", "bank"] as PaymentMethod[]).map((m) => (
-                <option key={m} value={m} className="capitalize">
-                  {m === "payit" ? "PayIt" : m}
-                </option>
+            <div className="mb-3 grid grid-cols-3 gap-2">
+              {PAYMENT_METHODS.map(({ value, label, icon: Icon }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setPaymentMethod(value)}
+                  className={cn(
+                    "flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-xs font-medium transition-colors",
+                    paymentMethod === value
+                      ? "border-brand-500 bg-brand-500/10 text-foreground"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                  {label}
+                </button>
               ))}
-            </select>
+            </div>
             <Button variant="primary" className="w-full" disabled={busy} onClick={handleMarkPaid}>
               Mark as Paid
             </Button>

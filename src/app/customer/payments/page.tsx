@@ -3,7 +3,7 @@ import { CreditCard } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatAED } from "@/lib/currency";
+import { formatAED, formatPaymentMethod } from "@/lib/currency";
 
 export default async function CustomerPaymentsPage() {
   const supabase = await createClient();
@@ -40,7 +40,7 @@ export default async function CustomerPaymentsPage() {
                 </span>
                 <div>
                   <p className="text-sm font-medium text-foreground">
-                    Request #{p.request_id} · <span className="capitalize">{p.method === "payit" ? "PayIt" : p.method}</span>
+                    Request #{p.request_id} · <span>{formatPaymentMethod(p.method)}</span>
                   </p>
                   <p className="text-xs text-muted-foreground">{format(new Date(p.created_at), "d MMM yyyy, h:mm a")}</p>
                 </div>

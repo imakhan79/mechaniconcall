@@ -3,7 +3,7 @@ import { CreditCard, DollarSign, TrendingDown, Wallet } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatAED } from "@/lib/currency";
+import { formatAED, formatPaymentMethod } from "@/lib/currency";
 
 export default async function AdminPaymentsPage() {
   const supabase = await createClient();
@@ -45,7 +45,7 @@ export default async function AdminPaymentsPage() {
               {(payments ?? []).map((p) => (
                 <tr key={p.id}>
                   <td className="px-4 py-3 font-medium text-foreground">#{p.request_id}</td>
-                  <td className="px-4 py-3 capitalize text-muted-foreground">{p.method === "payit" ? "PayIt" : p.method}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{formatPaymentMethod(p.method)}</td>
                   <td className="px-4 py-3 text-foreground">{formatAED(p.amount)}</td>
                   <td className="px-4 py-3">
                     <Badge variant={p.status === "completed" ? "success" : p.status === "failed" ? "danger" : "warning"}>

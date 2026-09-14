@@ -61,7 +61,17 @@ export type RequestStatus =
   | "PAID"
   | "CANCELLED";
 export type EstimateStatus = "pending" | "approved" | "rejected";
-export type PaymentMethod = "cash" | "card" | "jazzcash" | "easypaisa" | "bank" | "online" | "payit";
+export type PaymentMethod =
+  | "cash"
+  | "card"
+  | "jazzcash"
+  | "easypaisa"
+  | "bank"
+  | "online"
+  | "payit"
+  | "apple_pay"
+  | "careem_pay"
+  | "e_and_money";
 export type PaymentStatus = "pending" | "completed" | "failed";
 export type PayoutStatus = "requested" | "paid" | "rejected";
 
