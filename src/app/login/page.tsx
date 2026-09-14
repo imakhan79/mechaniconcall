@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles, User, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { demoLogin } from "@/app/login/actions";
+import { demoLogin, customerDemoLogin, mechanicDemoLogin } from "@/app/login/actions";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -29,7 +29,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState<"admin" | "customer" | "mechanic" | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -50,9 +50,9 @@ export default function LoginPage() {
   }
 
   async function handleDemoLogin() {
-    setDemoLoading(true);
+    setDemoLoading("admin");
     const result = await demoLogin();
-    setDemoLoading(false);
+    setDemoLoading(null);
 
     if (!result.ok) {
       toast.error(result.error);
@@ -63,9 +63,37 @@ export default function LoginPage() {
     router.refresh();
   }
 
+  async function handleCustomerDemoLogin() {
+    setDemoLoading("customer");
+    const result = await customerDemoLogin();
+    setDemoLoading(null);
+
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+
+    router.push("/customer");
+    router.refresh();
+  }
+
+  async function handleMechanicDemoLogin() {
+    setDemoLoading("mechanic");
+    const result = await mechanicDemoLogin();
+    setDemoLoading(null);
+
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
+
+    router.push("/mechanic");
+    router.refresh();
+  }
+
   return (
     <main
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4 py-10"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10"
       suppressHydrationWarning
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -110,7 +138,7 @@ export default function LoginPage() {
               placeholder="••••••••"
             />
           </div>
-          <Button type="submit" variant="primary" size="lg" disabled={loading || demoLoading} className="group mt-2 w-full">
+          <Button type="submit" variant="primary" size="lg" disabled={loading || !!demoLoading} className="group mt-2 w-full">
             {loading ? (
               "Signing in..."
             ) : (
@@ -133,17 +161,41 @@ export default function LoginPage() {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            disabled={loading || demoLoading}
-            onClick={handleDemoLogin}
-            className="w-full"
-          >
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-            {demoLoading ? "Signing in..." : "Try Demo Login (Workshop Admin)"}
-          </Button>
+          <p className="text-center text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            One-click demo access
+          </p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!!demoLoading || loading}
+              onClick={handleCustomerDemoLogin}
+              className="w-full"
+            >
+              <User className="h-4 w-4" aria-hidden="true" />
+              {demoLoading === "customer" ? "Signing in..." : "Customer"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!!demoLoading || loading}
+              onClick={handleMechanicDemoLogin}
+              className="w-full"
+            >
+              <Wrench className="h-4 w-4" aria-hidden="true" />
+              {demoLoading === "mechanic" ? "Signing in..." : "Mechanic"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!!demoLoading || loading}
+              onClick={handleDemoLogin}
+              className="w-full"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              {demoLoading === "admin" ? "Signing in..." : "Admin"}
+            </Button>
+          </div>
         </form>
       </motion.div>
     </main>

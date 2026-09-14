@@ -19,3 +19,23 @@ export async function demoLogin() {
 
   return { ok: true as const };
 }
+
+export async function customerDemoLogin() {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: "demo.customer@mechaniconcall.app",
+    password: "DemoPass123!",
+  });
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const };
+}
+
+export async function mechanicDemoLogin() {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: "ahmed.khan@demo.mechaniconcall.app",
+    password: "DemoPass123!",
+  });
+  if (error) return { ok: false as const, error: error.message };
+  return { ok: true as const };
+}
