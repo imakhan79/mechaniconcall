@@ -23,6 +23,11 @@ export async function createClient() {
           }
         },
       },
+      global: {
+        // Next.js patches global fetch to apply its Data Cache by default;
+        // Supabase reads must never be cached across requests/users.
+        fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+      },
     }
   );
 }
