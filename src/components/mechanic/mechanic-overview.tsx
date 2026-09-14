@@ -77,13 +77,21 @@ export function MechanicOverview({
   async function handleClaim(requestId: number) {
     setBusy(true);
     const supabase = createClient();
-    const { error } = await supabase
+    // RLS scopes this update to still-open rows (status='SEARCHING' AND
+    // mechanic_id IS NULL); if another mechanic claimed it first, the row
+    // no longer matches and PostgREST returns success with zero rows
+    // rather than an error — .select().maybeSingle() is what lets us tell
+    // the difference and avoid falsely reporting success.
+    const { data, error } = await supabase
       .from("service_requests")
       .update({ mechanic_id: mechanicId, status: "MECHANIC_ACCEPTED", accepted_at: new Date().toISOString() })
-      .eq("id", requestId);
+      .eq("id", requestId)
+      .select("id")
+      .maybeSingle();
     setBusy(false);
-    if (error) {
-      toast.error("Someone may have already claimed this job.");
+    if (error || !data) {
+      toast.error("Someone already claimed this job.");
+      setOpenRequests((prev) => prev.filter((r) => r.id !== requestId));
       return;
     }
     toast.success("Job claimed");
